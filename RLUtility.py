@@ -8,15 +8,14 @@ import requests
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QPushButton, QDialogButtonBox, QMessageBox, QFileDialog
 
-import RLConfigs
 import RLConsole
 import RLDataFiles
+import RLItems
+import RLPlayer
 import RLRescue
 import global_var
 import RLDebug
 import RLUpdate
-# import RLCustom
-# import RLMain
 
 global rlMenu
 
@@ -114,8 +113,8 @@ class RLMenu:
         if not latest:
 
             # 检测是否忽略了新版本更新
-            if 'ignored_version' in RLConfigs.configs.config_keys():
-                if latest_version in RLConfigs.configs.get_config('ignored_version'):
+            if 'ignored_version' in global_var.configs.config_keys():
+                if latest_version in global_var.configs.get_config('ignored_version'):
                     RLDebug.debug("发现新版本{}，但已被配置项忽视，跳过本次更新".format(latest_version),
                                   type='warn',
                                   who=self.__class__.__name__)
@@ -169,12 +168,13 @@ class RLMenu:
 
             # 获取数据文件信息
             name = data_file['name'].replace('.json', '')
+            name = name.lower()
             sha = data_file['sha']
             file_size = data_file['size']
             download_url = data_file['download_url']
 
             # 检查是否有新数据文件
-            if name not in RLDataFiles.data_files.data_files_hash_values():
+            if name not in global_var.data_files_hash.values():
                 cnt_new += 1
 
                 RLDebug.debug("发现新数据文件: {}<br>大小: {} Bytes".format(name, file_size), who=self.__class__.__name__)
@@ -183,11 +183,11 @@ class RLMenu:
                 new_data_files.append((name, file_size, download_url))
 
             # 重名数据文件检查哈希值是否相同
-            elif sha not in RLDataFiles.data_files.data_files_hash_keys():
+            elif sha not in global_var.data_files_hash.keys():
                 cnt_changed += 1
 
                 # 哈希值不同弹窗确认是否覆盖
-                RLDebug.debug("发现改动的数据文件: {}<br>大小: {} Bytes, 已弹窗询问".format(name, file_size),
+                RLDebug.debug("发现改动的数据文件: {}<br>大小: {} Bytes,<br>hash: {}, 已弹窗询问".format(name, file_size, sha),
                               who=self.__class__.__name__)
                 msgbox = QMessageBox()
                 msgbox.setWindowTitle("下载数据文件确认")
@@ -218,7 +218,7 @@ class RLMenu:
 
             else:
                 cnt_existed += 1
-                RLDebug.debug("数据文件已存在: {}, 跳过同步".format(RLDataFiles.data_files.get_data_files_hash(sha)),
+                RLDebug.debug("数据文件已存在: {}, 跳过同步".format(global_var.data_files_hash.get(sha)),
                               type='warn',
                               who=self.__class__.__name__)
 
@@ -239,7 +239,7 @@ class RLMenu:
 
         # 刷新数据文件列表
         if not cnt_downloaded == 0:
-            RLDataFiles.loadDataFiles()
+            RLDataFiles.load_data_files()
 
         RLDebug.debug("数据文件同步完成"
                       "\n在云端共发现了{}个数据文件"
@@ -351,17 +351,35 @@ class RLMenu:
                 return
 
             # 检测是否已经添加了相同的数据文件
-            elif hash_value in RLDataFiles.data_files.data_files_hash_keys():
+            elif hash_value in global_var.data_files_hash.keys():
                 RLDebug.debug("已经载入相同的数据文件: {0}, 跳过当前数据文件"
-                              .format(RLDataFiles.data_files.get_data_files_hash(hash_value)),
+                              .format(global_var.data_files_hash.get(hash_value)),
                               type='warn',
                               who=self.__class__.__name__)
                 return
 
-            # 将数据文件添加到数据文件列表和数据文件列表框中
-            RLDataFiles.data_files.data_files_append(data)
-            RLDataFiles.data_files.set_data_files_hash(hash_value, data.get('name'))
-            self.ui.comboBox.addItem(data.get('name'))
+            global_var.data_files_hash[hash_value] = data.get('name')
+            global_var.data_files.append(data)
+            # 将数据文件添加到数据文件列表中
+
+            # 检测是否是配置文件
+            if data.get('type') == 'config':
+                RLDebug.debug("发现配置文件：{0}, 开始解析".format(display_name),
+                              who='DataFiles')
+                global_var.configs.applyConfig(data)
+
+            # 检测是否是物品数据文件
+            if data.get('type') == 'item':
+                RLDebug.debug("发现物品数据文件：{0}, 开始解析".format(display_name),
+                              who='DataFiles')
+                RLItems.load_items(data)
+
+            # 检测是否是玩家信息存档文件
+            if data.get('type') == 'player':
+                RLDebug.debug("发现玩家信息存档文件：{0}, 开始解析".format(display_name),
+                              who='DataFiles')
+                RLPlayer.load_player_info(data)
+
         RLDebug.debug("已载入数据文件: " + data.get('name'), type='success', who=self.__class__.__name__)
 
     @staticmethod

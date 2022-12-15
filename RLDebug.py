@@ -26,34 +26,32 @@ class RLDebug:
         # 处理传入参数
 
         # 分割线
-        if kwargs.get('split') is True:
+        if kwargs.get('split'):
             # 将调试信息输出
-            self.ui.textDebug.append("-" * 10)
+            self.ui.textDebug.append("-" * kwargs.get('split') * 5)
             # 移动到文本框底部
             self.ui.textDebug.moveCursor(self.ui.textDebug.textCursor().End)
-            print("-" * 10)
+            print("-" * kwargs.get('split') * 5)
             return
 
         # 信息来源
-        info_from = "@主界面"
-        if kwargs.get('who') == 'RLCustom':
-            info_from = '@自定义模板编辑器'
-        elif kwargs.get('who') == 'RLUpdate':
-            info_from = '@更新检查实用工具'
-        elif kwargs.get('who') == 'RLMenu':
-            info_from = '@功能菜单'
-        elif kwargs.get('who') == 'RLDebug':
-            info_from = '@调试输出'
-        elif kwargs.get('who') == 'RLRescue':
-            info_from = '@恢复模式'
-        elif kwargs.get('who') == 'Configs':
-            info_from = '@配置项模块'
-        elif kwargs.get('who') == 'DataFiles':
-            info_from = '@数据文件模块'
-        elif kwargs.get('who') == 'RLConsole':
-            info_from = '@控制台'
-        elif kwargs.get('who') == 'Player':
-            info_from = '@玩家信息'
+        info_sources = {'RLMain': '@主界面',
+                        'RLUpdate': '@更新检查实用工具',
+                        'RLMenu': '@功能菜单',
+                        'RLDebug': '@调试输出',
+                        'Configs': '@配置项模块',
+                        'DataFiles': '@数据文件模块',
+                        'RLConsole': '@控制台',
+                        'Player': '@玩家信息',
+                        'Items': '@藏品信息'}
+
+        info_from = "@未知来源"
+        if kwargs.get('who'):
+            who = kwargs.get('who')
+            if who in info_sources:
+                info_from = info_sources[who]
+            else:
+                info_from = '@' + who
 
         # 错误信息
         if kwargs.get('type') == 'error':
@@ -92,8 +90,8 @@ def debug(text: str, **kwargs) -> None:
     rlDebug.debug(text, **kwargs)
 
 
-def split():
-    rlDebug.debug("", split=True)
+def split(length=2):
+    rlDebug.debug("", split=length)
 
 
 def display() -> None:

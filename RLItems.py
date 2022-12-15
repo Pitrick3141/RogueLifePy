@@ -39,15 +39,38 @@ def load_items(item_file):
 
     # 遍历藏品
     for item in item_file.get('items'):
+        required_keys = ['index', 'name', 'eff', 'des', 'rare']
+        missed_keys = []
+        for key in required_keys:
+            if key not in item.keys():
+                missed_keys.append(key)
+        # 如果有缺失的关键键值对
+        if not len(missed_keys) == 0:
+            RLDebug.debug("已损坏的数据文件：{0}, 缺失如下键值对:{1}, 跳过当前数据文件".format(
+                item.name, missed_keys),
+                type='error', who='Items')
+            return
         new_item = Item(item.get("index"),
                         item.get("name"),
                         item.get("eff"),
                         item.get("des"),
                         item.get("rare"),
                         item.get("exclusive"))
+        if item.get("adjustments"):
+            adjustments = item.get("adjustments")
+            for adjustment in adjustments:
+                new_item.addAdjustment(adjustment, adjustments[adjustment])
+        if item.get("exclude"):
+            new_item.exclude = item.get("exclude")
+        if item.get("require"):
+            new_item.require = item.get("require")
         if new_item.index not in global_var.items_list.keys():
             global_var.items_list[new_item.index] = new_item
             cnt += 1
+            RLDebug.debug("载入了序号为{}的藏品{}".format(
+                new_item.index,
+                new_item.name),
+                type='success', who='Items')
         else:
             RLDebug.debug("无法载入序号为{}的藏品{}: 相同编号的藏品{}已存在".format(
                 new_item.index,

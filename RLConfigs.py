@@ -1,8 +1,7 @@
 from PySide2.QtWidgets import QMessageBox
 
 import RLDebug
-
-global configs
+import global_var
 
 
 class Configs:
@@ -117,5 +116,4 @@ class Configs:
 
 
 def init():
-    global configs
-    configs = Configs()
+    global_var.configs = Configs()

@@ -23,12 +23,11 @@ if 'mac' in platform.platform().lower():
     os.environ['QT_MAC_WANTS_LAYER'] = '1'
 
 # 初始化模块
+global_var.init()
 
 RLDebug.init()
 RLConfigs.init()
-RLDataFiles.init()
 
-global_var.init()
 
 RLPlayer.init()
 
@@ -36,7 +35,7 @@ RLUpdate.init()
 RLUtility.init()
 
 # 载入数据文件
-RLDataFiles.loadDataFiles()
+RLDataFiles.load_data_files()
 
 # 初始化主窗口
 RLMain.init()
