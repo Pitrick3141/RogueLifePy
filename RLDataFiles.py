@@ -45,7 +45,7 @@ class DataFiles:
 
                 # 检查文件拓展名是否合法
                 if not file_name.find(".json") == -1:
-                    with open(os.path.abspath(path) + "\\" + file_name, 'rb') as f:
+                    with open(os.path.join(path, file_name), 'rb') as f:
                         # hash
                         data = f.read()
                         hash_obj = hashlib.sha1()
@@ -54,14 +54,14 @@ class DataFiles:
                         hash_value = hash_obj.hexdigest()
 
                     # 打开数据文件文件
-                    with open(os.path.abspath(path) + "\\" + file_name, 'rb') as load_json:
+                    with open(os.path.join(path, file_name), 'rb') as load_json:
 
                         # 数据文件文件字典
                         data = {}
                         # 缺少的键值对
                         missed_keys = []
                         # 显示的相对路径名称
-                        display_name = path + "\\" + file_name
+                        display_name = os.path.join(path, file_name)
 
                         # 尝试读取数据文件文件并转换为字典
                         try:
@@ -84,7 +84,7 @@ class DataFiles:
                             data[key.lower()] = value
 
                         # 检测是否有缺失的必需键值对
-                        for checked_key in ['version', 'type']:
+                        for checked_key in ['name', 'version', 'type']:
                             if checked_key not in data.keys():
                                 missed_keys.append(checked_key)
 

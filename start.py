@@ -1,3 +1,5 @@
+import platform
+
 from PySide2.QtWidgets import QApplication
 
 import RLPlayer
@@ -9,12 +11,16 @@ import RLDataFiles
 import RLUpdate
 import RLUtility
 import RLMain
+import os
 
 import RLConsole
 
 
 # 新建 Pyside2 Application
 app = QApplication([])
+
+if 'mac' in platform.platform().lower():
+    os.environ['QT_MAC_WANTS_LAYER'] = '1'
 
 # 初始化模块
 

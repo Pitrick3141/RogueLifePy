@@ -1,4 +1,5 @@
 from PySide2.QtGui import QIcon
+import os
 import RLItems
 
 # 当前版本号，用于检查更新
@@ -21,7 +22,7 @@ def init():
 
     # 读取程序图标
     global _app_icon
-    _app_icon = QIcon("ui\\icon.png")
+    _app_icon = QIcon(os.path.join('ui', 'icon.ico'))
 
     # 初始化藏品列表
     global items_list

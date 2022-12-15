@@ -1,6 +1,8 @@
 import hashlib
 import json
 import os
+import platform
+import subprocess
 
 import requests
 from PySide2.QtUiTools import QUiLoader
@@ -23,11 +25,11 @@ class RLMenu:
     def __init__(self):
         # 加载菜单UI
         try:
-            self.ui = QUiLoader().load('ui\\FormMenu.ui')
+            self.ui = QUiLoader().load(os.path.join('ui', 'FormMenu.ui'))
         except RuntimeError:
             # 缺少必要文件，启用恢复模式
             RLRescue.rescueMode()
-            self.ui = QUiLoader().load('ui\\FormMenu.ui')
+            self.ui = QUiLoader().load(os.path.join('ui', 'FormMenu.ui'))
 
         # 设置窗口图标
         self.ui.setWindowIcon(global_var.app_icon())
@@ -190,7 +192,7 @@ class RLMenu:
                 msgbox = QMessageBox()
                 msgbox.setWindowTitle("下载数据文件确认")
                 msgbox.setText("云端数据文件与本地数据文件同名但内容不同\n是否覆盖下载？")
-                msgbox.setInformativeText("当前本地同名数据文件:{0}\\data\\{1}.json".format(os.getcwd(), name))
+                msgbox.setInformativeText("当前本地同名数据文件:{}".format(os.path.join(os.getcwd(), 'data', name + '.json')))
                 msgbox.setIcon(QMessageBox.Warning)
                 msgbox.setStandardButtons(QMessageBox.Yes | QMessageBox.Ok | QMessageBox.No)
                 msgbox.setDefaultButton(QMessageBox.Yes)
@@ -270,9 +272,9 @@ class RLMenu:
             return False
 
         content = r.json()
-        with open("data\\{0}.json".format(name), "w") as f:
+        with open(os.path.join('data', name + '.json'), "w") as f:
             json.dump(content, f)
-        RLDebug.debug("数据文件已保存至{0}\\data\\{1}.json".format(os.getcwd(), name),
+        RLDebug.debug("数据文件已保存至{}".format(os.path.join(os.getcwd(), 'data', name + '.json')),
                       type='success',
                       who='RLMenu')
 
@@ -336,7 +338,7 @@ class RLMenu:
                 return
 
             # 检测是否有缺失的必需键值对
-            for checked_key in ['name', 'content', 'rolename', 'roledes']:
+            for checked_key in ['name', 'type', 'version']:
                 if checked_key not in data.keys():
                     missed_keys.append(checked_key)
 
@@ -376,7 +378,11 @@ class RLMenu:
     def openDir():
         # 打开数据文件目录
         RLDebug.debug("已打开数据文件目录", type='success', who='RLMenu')
-        os.startfile(os.getcwd() + "\\data")
+        file_dir = os.path.join(os.getcwd(), 'data')
+        if 'mac' in platform.platform().lower():
+            subprocess.call(["open", file_dir])
+        else:
+            os.startfile(file_dir)
 
 
 def init():

@@ -46,7 +46,7 @@ def rescueMode():
             str_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 
             # 若文件存在则跳过下载
-            if os.path.exists("ui\\{}".format(name)):
+            if os.path.exists(os.path.join('ui', name)):
                 continue
 
             try:
@@ -56,13 +56,13 @@ def rescueMode():
                 sys.exit(1)
 
             # 写入依赖文件
-            with open("ui\\{}".format(name), "wb") as f:
+            with open(os.path.join('ui', name), "wb") as f:
                 f.write(download.content)
 
             downloaded_files.append(
-                "{} 已下载依赖文件: ui\\{}\n文件大小: {}Bytes ({}MB)\n文件哈希: {}\n".format(
+                "{} 已下载依赖文件: {}\n文件大小: {}Bytes ({}MB)\n文件哈希: {}\n".format(
                     str_time,
-                    name,
+                    os.path.join('ui', name),
                     file_size,
                     file_size / 1000000,
                     file_hash))

@@ -1,4 +1,5 @@
 import time
+import os
 from PySide2.QtUiTools import QUiLoader
 
 import RLRescue
@@ -11,11 +12,11 @@ class RLDebug:
     def __init__(self):
         # 加载调试窗口UI
         try:
-            self.ui = QUiLoader().load('ui\\FormDebug.ui')
+            self.ui = QUiLoader().load(os.path.join('ui', 'FormDebug.ui'))
         except RuntimeError:
             # 缺少必要文件，启用恢复模式
             RLRescue.rescueMode()
-            self.ui = QUiLoader().load('ui\\FormDebug.ui')
+            self.ui = QUiLoader().load(os.path.join('ui', 'FormDebug.ui'))
         self.debug("调试输出模块初始化完成", type='success', who=self.__class__.__name__)
 
     def debug(self, text: str, **kwargs) -> None:

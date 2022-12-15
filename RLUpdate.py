@@ -20,11 +20,11 @@ class RLUpdate:
 
         # 加载更新弹窗UI
         try:
-            self.ui = QUiLoader().load('ui\\FormUpdate.ui')
+            self.ui = QUiLoader().load(os.path.join('ui', 'FormUpdate.ui'))
         except RuntimeError:
             # 缺少必要文件，启用恢复模式
             RLRescue.rescueMode()
-            self.ui = QUiLoader().load('ui\\FormUpdate.ui')
+            self.ui = QUiLoader().load(os.path.join('ui', 'FormUpdate.ui'))
 
         # 设置窗口图标
         self.ui.setWindowIcon(global_var.app_icon())
@@ -45,13 +45,13 @@ class RLUpdate:
         self.ui.buttonBox.addButton(button_ignore, QDialogButtonBox.RejectRole)
 
         # 绑定按钮事件
-        button_web.clicked.connect(self.openPublishPage)
-        button_download.clicked.connect(self.downloadUpdate)
-        button_ignore.clicked.connect(self.ignoreUpdate)
+        button_web.clicked.connect(self.open_publish_page)
+        button_download.clicked.connect(self.download_update)
+        button_ignore.clicked.connect(self.ignore_update)
 
         RLDebug.debug("更新提示模块初始化完成", type='success', who=self.__class__.__name__)
 
-    def setData(self, data):
+    def set_data(self, data):
         # 设置最新版本数据并显示
         self.json_data = data
 
@@ -71,13 +71,13 @@ class RLUpdate:
 
         self.ui.textInfo.setText(update_info)
 
-    def openPublishPage(self):
+    def open_publish_page(self):
 
         # 打开最新版本发布页面
         RLDebug.debug("已打开最新版本发布页面", type='success', who=self.__class__.__name__)
         webbrowser.open(self.json_data['html_url'])
 
-    def downloadUpdate(self):
+    def download_update(self):
 
         # 下载最新版本更新文件
 
@@ -115,7 +115,7 @@ class RLUpdate:
                                         self.json_data['assets'][0]['name'],
                                         "请手动解压并覆盖当前版本"))
 
-    def ignoreUpdate(self):
+    def ignore_update(self):
 
         # 弹窗询问是否跳过当前版本更新
         msgbox = QMessageBox()

@@ -1,4 +1,5 @@
 from PySide2.QtUiTools import QUiLoader
+import os
 
 import RLRescue
 import RLDebug
@@ -12,11 +13,11 @@ class RLConsole:
     def __init__(self):
         # 加载控制台UI
         try:
-            self.ui = QUiLoader().load('ui\\FormConsole.ui')
+            self.ui = QUiLoader().load(os.path.join('ui', 'FormConsole.ui'))
         except RuntimeError:
             # 缺少必要文件，启用恢复模式
             RLRescue.rescueMode()
-            self.ui = QUiLoader().load('ui\\FormConsole.ui')
+            self.ui = QUiLoader().load(os.path.join('ui', 'FormConsole.ui'))
 
         # 绑定命令选择框事件
         self.ui.listCommand.itemClicked.connect(self.commandChange)

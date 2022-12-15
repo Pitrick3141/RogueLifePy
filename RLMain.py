@@ -20,11 +20,11 @@ class RLMain:
     def __init__(self):
         # 加载主窗口UI
         try:
-            self.ui = QUiLoader().load('ui\\FormMain.ui')
+            self.ui = QUiLoader().load(os.path.join('ui', 'FormMain.ui'))
         except RuntimeError:
             # 缺少必要文件，启用恢复模式
             RLRescue.rescueMode()
-            self.ui = QUiLoader().load('ui\\FormMain.ui')
+            self.ui = QUiLoader().load(os.path.join('ui', 'FormMain.ui'))
 
         # 设置窗口图标
         self.ui.setWindowIcon(global_var.app_icon())
@@ -57,9 +57,9 @@ class RLMain:
         json_dump = {'config': True, 'version': '*', 'discovered_eggs': discovered_eggs}
 
         # 保存配置文件
-        with open("data\\discovered_eggs.json", "w") as f:
+        with open(os.path.join('data', 'discovered_eggs.json'), "w") as f:
             json.dump(json_dump, f)
-        RLDebug.debug("配置文件已保存至{}\\{}".format(os.getcwd(), "data\\discovered_eggs.json"))
+        RLDebug.debug("配置文件已保存至{}".format(os.path.join(os.getcwd(), 'data', 'discovered_eggs.json')))
 
         # 刷新彩蛋按钮
         self.refreshEgg()
