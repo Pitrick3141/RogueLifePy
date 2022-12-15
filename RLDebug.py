@@ -49,6 +49,10 @@ class RLDebug:
             info_from = '@配置项模块'
         elif kwargs.get('who') == 'DataFiles':
             info_from = '@数据文件模块'
+        elif kwargs.get('who') == 'RLConsole':
+            info_from = '@控制台'
+        elif kwargs.get('who') == 'Player':
+            info_from = '@玩家信息'
 
         # 错误信息
         if kwargs.get('type') == 'error':

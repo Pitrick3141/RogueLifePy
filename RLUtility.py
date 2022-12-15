@@ -7,6 +7,7 @@ from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QPushButton, QDialogButtonBox, QMessageBox, QFileDialog
 
 import RLConfigs
+import RLConsole
 import RLDataFiles
 import RLRescue
 import global_var
@@ -46,6 +47,7 @@ class RLMenu:
         self.ui.buttonSyncDataFiles.clicked.connect(self.syncDataFiles)
         self.ui.buttonCheckUpdate.clicked.connect(self.checkUpdate)
         self.ui.buttonDebug.clicked.connect(self.showDebug)
+        self.ui.buttonConsole.clicked.connect(self.showConsole)
 
     def checkUpdate(self):
 
@@ -145,7 +147,7 @@ class RLMenu:
             os.mkdir("data")
 
         try:
-            r = requests.get(url='https://api.github.com/repos/Pitrick3141/DontRLHere/contents/data',
+            r = requests.get(url='https://api.github.com/repos/Pitrick3141/RogueLifePy/contents/data',
                              params={'ref': 'master'})
         except requests.exceptions.ConnectionError:
             RLDebug.debug("网络连接异常，同步数据文件失败", type='error', who=self.__class__.__name__)
@@ -366,6 +368,11 @@ class RLMenu:
         RLDebug.display()
 
     @staticmethod
+    def showConsole():
+        # 显示控制台
+        RLConsole.display()
+
+    @staticmethod
     def openDir():
         # 打开数据文件目录
         RLDebug.debug("已打开数据文件目录", type='success', who='RLMenu')
@@ -385,8 +392,10 @@ def display():
 def set_debug_button_visible(is_visible):
     if is_visible:
         rlMenu.ui.buttonDebug.setVisible(True)
+        rlMenu.ui.buttonConsole.setVisible(True)
     else:
         rlMenu.ui.buttonDebug.setVisible(False)
+        rlMenu.ui.buttonConsole.setVisible(False)
     return
 
 

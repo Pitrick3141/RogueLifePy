@@ -1,5 +1,6 @@
 from PySide2.QtWidgets import QApplication
 
+import RLPlayer
 # 导入模块
 import global_var
 import RLDebug
@@ -8,6 +9,8 @@ import RLDataFiles
 import RLUpdate
 import RLUtility
 import RLMain
+
+import RLConsole
 
 
 # 新建 Pyside2 Application
@@ -21,6 +24,8 @@ RLDataFiles.init()
 
 global_var.init()
 
+RLPlayer.init()
+
 RLUpdate.init()
 RLUtility.init()
 
@@ -29,6 +34,9 @@ RLDataFiles.loadDataFiles()
 
 # 初始化主窗口
 RLMain.init()
+
+# 初始化命令台
+RLConsole.init()
 
 # 显示主窗口&检查更新
 

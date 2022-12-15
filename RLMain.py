@@ -66,6 +66,9 @@ class RLMain:
 
     def refreshEgg(self):
         discovered_eggs = RLConfigs.configs.get_config('discovered_eggs')
+        if not discovered_eggs:
+            self.ui.buttonEggs.setVisible(False)
+            return
         if len(discovered_eggs) > 0:
             self.ui.buttonEggs.setVisible(True)
             self.ui.buttonEggs.setIcon(global_var.app_icon())

@@ -6,6 +6,7 @@ import webbrowser
 from PySide2.QtWidgets import QMessageBox, QPushButton, QDialogButtonBox
 from PySide2.QtUiTools import QUiLoader
 
+import RLConfigs
 import RLDebug
 import global_var
 import RLRescue
@@ -131,8 +132,8 @@ class RLUpdate:
 
             # 将当前已忽略的版本和新忽略的版本序列化
             ignored_version = [self.json_data['tag_name']]
-            if 'ignored_version' in global_var.config_keys():
-                for ver in global_var.get_config('ignored_version'):
+            if 'ignored_version' in RLConfigs.configs.config_keys():
+                for ver in RLConfigs.configs.get_config('ignored_version'):
                     ignored_version.append(ver)
             RLDebug.debug("当前跳过的版本: {}".format(ignored_version))
             json_dump = {'config': True,

@@ -83,14 +83,8 @@ class DataFiles:
                         for key, value in original_data.items():
                             data[key.lower()] = value
 
-                        # 检测是否是配置文件
-                        if 'config' in data.keys():
-                            RLDebug.debug("发现配置文件：{0}, 开始解析".format(display_name), who=self.__class__.__name__)
-                            RLConfigs.configs.applyConfig(data)
-                            continue
-
                         # 检测是否有缺失的必需键值对
-                        for checked_key in ['name', 'content', 'rolename', 'roledes']:
+                        for checked_key in ['version', 'type']:
                             if checked_key not in data.keys():
                                 missed_keys.append(checked_key)
 
@@ -109,9 +103,17 @@ class DataFiles:
                                 , type='warn', who=self.__class__.__name__)
                             continue
 
-                        # 将数据文件添加到数据文件列表和数据文件列表框中
-                        self._data_files.append(data)
                         self._data_files_hash[hash_value] = data.get('name')
+
+                        # 检测是否是配置文件
+                        if data.get('type') == 'config':
+                            RLDebug.debug("发现配置文件：{0}, 开始解析".format(display_name),
+                                          who=self.__class__.__name__)
+                            RLConfigs.configs.applyConfig(data)
+                            continue
+
+                        # 将数据文件添加到数据文件列表中
+                        self._data_files.append(data)
 
                     RLDebug.debug("已载入数据文件: " + data.get('name'), who=self.__class__.__name__)
 

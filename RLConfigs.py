@@ -16,7 +16,7 @@ class Configs:
         # 应用配置文件
 
         # 检测配置文件是否启用
-        if not config_file.get('config') is True:
+        if not config_file.get('enabled') is True:
             RLDebug.debug("配置文件未被启用或格式错误，跳过本次解析", type='error', who=self.__class__.__name__)
             return
 
