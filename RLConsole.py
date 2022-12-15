@@ -1,8 +1,8 @@
 from PySide2.QtUiTools import QUiLoader
 import os
 
+import RLConditions
 import RLDataFiles
-import RLPlayer
 import RLRescue
 import RLDebug
 import global_var
@@ -36,22 +36,26 @@ class RLConsole:
         self.set_coefficient((None, None))
 
         self.current_command_index = -1
-        self.coefficient_1 = 0
-        self.coefficient_2 = 0
+        self.coefficient_1 = ""
+        self.coefficient_2 = ""
 
         # 命令列表
         self.commands_list = ['获取物品',
                               '玩家信息',
                               '设置修正',
                               '保存玩家信息',
-                              '读取玩家信息',
-                              '格式化数据文件']
+                              '格式化数据文件',
+                              '判断基本语句',
+                              '判断复合语句',
+                              '测试复合语句拆分']
         self.coefficients_list = [('物品序号', None),
                                   (None, None),
                                   ("修正名称", "修正值"),
                                   (None, None),
-                                  (None, None),
-                                  ('文件名', None)]
+                                  ('文件名', None),
+                                  ('语句', None),
+                                  ('语句', None),
+                                  ('语句', None)]
         for command in self.commands_list:
             self.ui.listCommand.addItem(command)
         RLDebug.debug("控制台初始化完成", type='success', who=self.__class__.__name__)
@@ -95,9 +99,16 @@ class RLConsole:
         elif self.current_command_index == 3:
             RLDataFiles.save_player_info()
         elif self.current_command_index == 4:
-            RLUtility
-        elif self.current_command_index == 5:
             RLDataFiles.reformat_data_file(self.coefficient_1)
+        elif self.current_command_index == 5:
+            RLConditions.check_logic(self.coefficient_1)
+        elif self.current_command_index == 6:
+            if RLConditions.check(RLConditions.parse_conditions(self.coefficient_1)[0]) is True:
+                RLDebug.debug("判断完毕，最终结果为真", type='success', who=self.__class__.__name__)
+            else:
+                RLDebug.debug("判断完毕，最终结果为假", type='success', who=self.__class__.__name__)
+        elif self.current_command_index == 7:
+            RLConditions.test_parse(RLConditions.parse_conditions(self.coefficient_1)[0], 0)
 
     def coefficient1Edit(self):
         self.coefficient_1 = self.ui.lineEditCoef1.text()

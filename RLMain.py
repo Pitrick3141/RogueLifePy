@@ -110,5 +110,5 @@ def init():
 
 
 def display() -> None:
-    RLDebug.debug("已打开主页面", type='success')
+    RLDebug.debug("已打开主页面", type='success', who='RLMain')
     rlMain.ui.show()

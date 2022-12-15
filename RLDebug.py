@@ -43,7 +43,9 @@ class RLDebug:
                         'DataFiles': '@数据文件模块',
                         'RLConsole': '@控制台',
                         'Player': '@玩家信息',
-                        'Items': '@藏品信息'}
+                        'Items': '@藏品信息',
+                        'Conditions': '@检定模块',
+                        }
 
         info_from = "@未知来源"
         if kwargs.get('who'):

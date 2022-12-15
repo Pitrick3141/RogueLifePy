@@ -36,7 +36,7 @@ class Player:
                           type='success', who=self.__class__.__name__)
             for adjustment in item.adjustments:
                 self.addAdjustment(adjustment, item.adjustments[adjustment])
-            self.attained_items.append(item)
+            self.attained_items.append(item.index)
             return True
         else:
             RLDebug.debug("无法获取序号为{}的藏品: 不存在该物品".format(index), type='error', who=self.__class__.__name__)
