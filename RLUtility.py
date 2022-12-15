@@ -6,6 +6,8 @@ import requests
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QPushButton, QDialogButtonBox, QMessageBox, QFileDialog
 
+import RLConfigs
+import RLDataFiles
 import RLRescue
 import global_var
 import RLDebug
@@ -39,10 +41,9 @@ class RLMenu:
         self.ui.buttonBox.addButton(button_close, QDialogButtonBox.AcceptRole)
 
         # 绑定按钮事件
-        self.ui.buttonOpenTemplateDir.clicked.connect(self.openDir)
-        self.ui.buttonImportTemplate.clicked.connect(self.importDataFiles)
-        # self.ui.buttonCustomTemplate.clicked.connect(self.customTemplate)
-        self.ui.buttonSyncTemplates.clicked.connect(self.syncDataFiles)
+        self.ui.buttonOpenDataFilesDir.clicked.connect(self.openDir)
+        self.ui.buttonImportDataFile.clicked.connect(self.importDataFiles)
+        self.ui.buttonSyncDataFiles.clicked.connect(self.syncDataFiles)
         self.ui.buttonCheckUpdate.clicked.connect(self.checkUpdate)
         self.ui.buttonDebug.clicked.connect(self.showDebug)
 
@@ -109,8 +110,8 @@ class RLMenu:
         if not latest:
 
             # 检测是否忽略了新版本更新
-            if 'ignored_version' in global_var.config_keys():
-                if latest_version in global_var.get_config('ignored_version'):
+            if 'ignored_version' in RLConfigs.configs.config_keys():
+                if latest_version in RLConfigs.configs.get_config('ignored_version'):
                     RLDebug.debug("发现新版本{}，但已被配置项忽视，跳过本次更新".format(latest_version),
                                   type='warn',
                                   who=self.__class__.__name__)
@@ -139,7 +140,7 @@ class RLMenu:
         # 从Github同步数据文件
         RLDebug.debug("开始同步数据文件", who=self.__class__.__name__)
 
-        # 若不存在数据文件夹则建立模板文件夹
+        # 若不存在数据文件目录则建立数据文件目录
         if not os.path.exists("data"):
             os.mkdir("data")
 
@@ -155,30 +156,30 @@ class RLMenu:
 
         RLDebug.debug("已获取数据文件列表", type='success', who=self.__class__.__name__)
 
-        # 新模板列表
+        # 新数据文件列表
         new_data_files = []
 
-        # 遍历云端模板列表
+        # 遍历云端数据文件列表
         for data_file in json_data:
             cnt_found += 1
 
-            # 获取模板信息
+            # 获取数据文件信息
             name = data_file['name'].replace('.json', '')
             sha = data_file['sha']
             file_size = data_file['size']
             download_url = data_file['download_url']
 
-            # 检查是否有新模板
-            if name not in global_var.data_files_hash_values():
+            # 检查是否有新数据文件
+            if name not in RLDataFiles.data_files.data_files_hash_values():
                 cnt_new += 1
 
                 RLDebug.debug("发现新数据文件: {}<br>大小: {} Bytes".format(name, file_size), who=self.__class__.__name__)
 
-                # 加入新模板列表中
+                # 加入新数据文件列表中
                 new_data_files.append((name, file_size, download_url))
 
-            # 重名模板检查哈希值是否相同
-            elif sha not in global_var.data_files_hash_keys():
+            # 重名数据文件检查哈希值是否相同
+            elif sha not in RLDataFiles.data_files.data_files_hash_keys():
                 cnt_changed += 1
 
                 # 哈希值不同弹窗确认是否覆盖
@@ -213,11 +214,11 @@ class RLMenu:
 
             else:
                 cnt_existed += 1
-                RLDebug.debug("数据文件已存在: {}, 跳过同步".format(global_var.get_data_files_hash(sha)),
+                RLDebug.debug("数据文件已存在: {}, 跳过同步".format(RLDataFiles.data_files.get_data_files_hash(sha)),
                               type='warn',
                               who=self.__class__.__name__)
 
-        # 弹窗提示并下载所有新模板
+        # 弹窗提示并下载所有新数据文件
         if len(new_data_files) > 0:
             str_new_data_files = "是否下载如下{}个新数据文件:\n".format(len(new_data_files))
             for (temp_name, temp_size, temp_url) in new_data_files:
@@ -232,26 +233,25 @@ class RLMenu:
                     if self.downloadDataFiles(temp_url, temp_name):
                         cnt_downloaded += 1
 
-        # 刷新模板列表
+        # 刷新数据文件列表
         if not cnt_downloaded == 0:
-            pass
-            # RLMain.loadTemplates()
+            RLDataFiles.loadDataFiles()
 
-        RLDebug.debug("模板同步完成"
-                      "\n在云端共发现了{}个模板"
-                      "\n其中{}个模板已是最新"
-                      "\n{}个模板有变动"
-                      "\n{}个模板在本地不存在"
-                      "\n本次同步共下载了{}个模板".format(cnt_found, cnt_existed, cnt_changed, cnt_new, cnt_downloaded),
+        RLDebug.debug("数据文件同步完成"
+                      "\n在云端共发现了{}个数据文件"
+                      "\n其中{}个数据文件已是最新"
+                      "\n{}个数据文件有变动"
+                      "\n{}个数据文件在本地不存在"
+                      "\n本次同步共下载了{}个数据文件".format(cnt_found, cnt_existed, cnt_changed, cnt_new, cnt_downloaded),
                       type='success',
                       who=self.__class__.__name__)
 
-        QMessageBox.information(self.ui, "模板同步完成",
-                                "在云端共发现了{}个模板"
-                                "\n其中{}个模板已是最新"
-                                "\n{}个模板有变动"
-                                "\n{}个模板在本地不存在"
-                                "\n本次同步共下载了{}个模板".format(
+        QMessageBox.information(self.ui, "数据文件同步完成",
+                                "在云端共发现了{}个数据文件"
+                                "\n其中{}个数据文件已是最新"
+                                "\n{}个数据文件有变动"
+                                "\n{}个数据文件在本地不存在"
+                                "\n本次同步共下载了{}个数据文件".format(
                                     cnt_found,
                                     cnt_existed,
                                     cnt_changed,
@@ -313,12 +313,12 @@ class RLMenu:
 
             # 解码失败异常：一般是内容为空或者不合法
             except json.decoder.JSONDecodeError:
-                RLDebug.debug("已损坏的数据文件：{0}, 模板文件内容为空或不合法, 跳过当前数据文件".format(display_name),
+                RLDebug.debug("已损坏的数据文件：{0}, 数据文件内容为空或不合法, 跳过当前数据文件".format(display_name),
                               type='error',
                               who=self.__class__.__name__)
                 return
             except UnicodeDecodeError:
-                RLDebug.debug("已损坏的数据文件：{0}, 模板文件编码格式有误, 跳过当前数据文件".format(display_name),
+                RLDebug.debug("已损坏的数据文件：{0}, 数据文件编码格式有误, 跳过当前数据文件".format(display_name),
                               type='error',
                               who=self.__class__.__name__)
                 return
@@ -347,16 +347,16 @@ class RLMenu:
                 return
 
             # 检测是否已经添加了相同的数据文件
-            elif hash_value in global_var.data_files_hash_keys():
+            elif hash_value in RLDataFiles.data_files.data_files_hash_keys():
                 RLDebug.debug("已经载入相同的数据文件: {0}, 跳过当前数据文件"
-                              .format(global_var.get_data_files_hash(hash_value)),
+                              .format(RLDataFiles.data_files.get_data_files_hash(hash_value)),
                               type='warn',
                               who=self.__class__.__name__)
                 return
 
             # 将数据文件添加到数据文件列表和数据文件列表框中
-            global_var.data_files_append(data)
-            global_var.set_data_files_hash(hash_value, data.get('name'))
+            RLDataFiles.data_files.data_files_append(data)
+            RLDataFiles.data_files.set_data_files_hash(hash_value, data.get('name'))
             self.ui.comboBox.addItem(data.get('name'))
         RLDebug.debug("已载入数据文件: " + data.get('name'), type='success', who=self.__class__.__name__)
 
@@ -390,7 +390,7 @@ def set_debug_button_visible(is_visible):
     return
 
 
-def syncTemplates():
+def syncDataFiles():
     rlMenu.syncDataFiles()
     return
 

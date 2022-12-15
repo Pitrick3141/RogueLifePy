@@ -35,16 +35,20 @@ class RLDebug:
 
         # 信息来源
         info_from = "@主界面"
-        if kwargs.get('who') == 'FDCustom':
+        if kwargs.get('who') == 'RLCustom':
             info_from = '@自定义模板编辑器'
-        elif kwargs.get('who') == 'FDUpdate':
+        elif kwargs.get('who') == 'RLUpdate':
             info_from = '@更新检查实用工具'
-        elif kwargs.get('who') == 'FDMenu':
+        elif kwargs.get('who') == 'RLMenu':
             info_from = '@功能菜单'
-        elif kwargs.get('who') == 'FDDebug':
+        elif kwargs.get('who') == 'RLDebug':
             info_from = '@调试输出'
-        elif kwargs.get('who') == 'FDRescue':
+        elif kwargs.get('who') == 'RLRescue':
             info_from = '@恢复模式'
+        elif kwargs.get('who') == 'Configs':
+            info_from = '@配置项模块'
+        elif kwargs.get('who') == 'DataFiles':
+            info_from = '@数据文件模块'
 
         # 错误信息
         if kwargs.get('type') == 'error':
@@ -88,5 +92,5 @@ def split():
 
 
 def display() -> None:
-    debug("已打开调试输出界面", type='success', who='FDDebug')
+    debug("已打开调试输出界面", type='success', who='RLDebug')
     rlDebug.ui.show()

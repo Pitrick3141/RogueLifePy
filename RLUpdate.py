@@ -26,7 +26,7 @@ class RLUpdate:
             self.ui = QUiLoader().load('ui\\FormUpdate.ui')
 
         # 设置窗口图标
-        self.ui.setWindowIcon(global_var.app_icon)
+        self.ui.setWindowIcon(global_var.app_icon())
 
         # 最新版本信息
         self.json_data = {}

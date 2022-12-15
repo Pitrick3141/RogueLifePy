@@ -30,9 +30,21 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>491</width>
-     <height>721</height>
+     <width>490</width>
+     <height>720</height>
     </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>490</width>
+     <height>720</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>490</width>
+     <height>720</height>
+    </size>
    </property>
   </widget>
  </widget>
