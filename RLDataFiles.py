@@ -12,7 +12,6 @@ global data_files
 
 
 class DataFiles:
-
     # 数据文件列表
     _data_files = []
 
@@ -92,28 +91,31 @@ class DataFiles:
                         if not len(missed_keys) == 0:
                             RLDebug.debug("已损坏的数据文件：{0}, 缺失如下键值对:{1}, 跳过当前数据文件".format(
                                 display_name,
-                                missed_keys)
-                                , type='error', who=self.__class__.__name__)
+                                missed_keys),
+                                type='error', who=self.__class__.__name__)
                             continue
 
                         # 检测是否已经添加了相同的数据文件
                         elif hash_value in self._data_files_hash:
                             RLDebug.debug("已经载入相同的数据文件: {0}, 跳过当前数据文件".format(
-                                self._data_files_hash.get(hash_value))
-                                , type='warn', who=self.__class__.__name__)
+                                self._data_files_hash.get(hash_value)),
+                                type='warn', who=self.__class__.__name__)
                             continue
 
                         self._data_files_hash[hash_value] = data.get('name')
+                        self._data_files.append(data)
+                        # 将数据文件添加到数据文件列表中
 
                         # 检测是否是配置文件
                         if data.get('type') == 'config':
                             RLDebug.debug("发现配置文件：{0}, 开始解析".format(display_name),
                                           who=self.__class__.__name__)
                             RLConfigs.configs.applyConfig(data)
-                            continue
 
-                        # 将数据文件添加到数据文件列表中
-                        self._data_files.append(data)
+                        # 检测是否是物品数据文件
+                        if data.get('type') == 'item':
+                            RLDebug.debug("发现物品数据文件：{0}, 开始解析".format(display_name),
+                                          who=self.__class__.__name__)
 
                     RLDebug.debug("已载入数据文件: " + data.get('name'), who=self.__class__.__name__)
 
@@ -122,8 +124,8 @@ class DataFiles:
                     RLDebug.debug("不支持的文件类型(目前仅支持.json格式)：{0}, 跳过当前数据文件".format(display_name),
                                   type='error', who=self.__class__.__name__)
 
-        RLDebug.debug("数据文件载入完成,共载入{0}个数据文件".format(len(self._data_files))
-                      , type='success', who=self.__class__.__name__)
+        RLDebug.debug("数据文件载入完成,共载入{0}个数据文件".format(len(self._data_files)),
+                      type='success', who=self.__class__.__name__)
 
     def data_files_hash_keys(self):
         return self._data_files_hash.keys()

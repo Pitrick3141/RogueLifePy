@@ -1,9 +1,10 @@
 import platform
-
+import os
 from PySide2.QtWidgets import QApplication
 
-import RLPlayer
 # 导入模块
+import RLPlayer
+
 import global_var
 import RLDebug
 import RLConfigs
@@ -11,7 +12,6 @@ import RLDataFiles
 import RLUpdate
 import RLUtility
 import RLMain
-import os
 
 import RLConsole
 
