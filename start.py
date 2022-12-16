@@ -2,6 +2,7 @@ import platform
 import os
 from PySide2.QtWidgets import QApplication
 
+import RLGame
 # 导入模块
 import RLPlayer
 
@@ -39,6 +40,9 @@ RLDataFiles.load_data_files()
 
 # 初始化主窗口
 RLMain.init()
+
+# 初始化游戏窗口
+RLGame.init()
 
 # 初始化命令台
 RLConsole.init()

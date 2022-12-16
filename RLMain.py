@@ -6,6 +6,7 @@ import time
 from PySide2.QtWidgets import QMessageBox
 from PySide2.QtUiTools import QUiLoader
 
+import RLGame
 import RLRescue
 import RLDebug
 import RLUtility
@@ -32,9 +33,10 @@ class RLMain:
         self.refreshEgg()
 
         # 绑定按钮事件
-        self.ui.buttonQuit.clicked.connect(self.quitProgram)
+        self.ui.buttonQuit.clicked.connect(quitProgram)
         self.ui.buttonEggs.clicked.connect(self.showEggs)
-        self.ui.buttonMenu.clicked.connect(self.openMenu)
+        self.ui.buttonMenu.clicked.connect(openMenu)
+        self.ui.buttonStart.clicked.connect(openGame)
 
         RLDebug.debug("主界面初始化完成", type='success', who=self.__class__.__name__)
 
@@ -77,32 +79,6 @@ class RLMain:
         else:
             self.ui.buttonEggs.setVisible(False)
 
-    @staticmethod
-    def openMenu():
-        # 打开菜单
-        if global_var.configs.get_config('enable_debug') is True:
-            RLUtility.set_debug_button_visible(True)
-        else:
-            RLUtility.set_debug_button_visible(False)
-        RLUtility.display()
-
-    @staticmethod
-    def quitProgram():
-        # 弹窗确认是否退出程序
-        msgbox = QMessageBox()
-        msgbox.setWindowTitle("确认退出")
-        msgbox.setText("你确定要退出游戏吗？")
-        msgbox.setIcon(QMessageBox.Question)
-        msgbox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        msgbox.setDefaultButton(QMessageBox.Yes)
-        msgbox.setButtonText(QMessageBox.Yes, "确定")
-        msgbox.setButtonText(QMessageBox.No, "再想想")
-        ret = msgbox.exec_()
-        if ret == QMessageBox.Yes:
-            sys.exit(0)
-        else:
-            return
-
 
 def init():
     global rlMain
@@ -112,3 +88,34 @@ def init():
 def display() -> None:
     RLDebug.debug("已打开主页面", type='success', who='RLMain')
     rlMain.ui.show()
+
+
+def openMenu():
+    # 打开菜单
+    if global_var.configs.get_config('enable_debug') is True:
+        RLUtility.set_debug_button_visible(True)
+    else:
+        RLUtility.set_debug_button_visible(False)
+    RLUtility.display()
+
+
+def openGame():
+    # 打开游戏
+    RLGame.display()
+
+
+def quitProgram():
+    # 弹窗确认是否退出程序
+    msgbox = QMessageBox()
+    msgbox.setWindowTitle("确认退出")
+    msgbox.setText("你确定要退出游戏吗？")
+    msgbox.setIcon(QMessageBox.Question)
+    msgbox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+    msgbox.setDefaultButton(QMessageBox.Yes)
+    msgbox.setButtonText(QMessageBox.Yes, "确定")
+    msgbox.setButtonText(QMessageBox.No, "再想想")
+    ret = msgbox.exec_()
+    if ret == QMessageBox.Yes:
+        sys.exit(0)
+    else:
+        return

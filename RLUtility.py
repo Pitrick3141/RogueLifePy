@@ -164,6 +164,11 @@ class RLMenu:
 
         # 遍历云端数据文件列表
         for data_file in json_data:
+
+            # 大小为0则跳过
+            if data_file['size'] == 0:
+                continue
+
             cnt_found += 1
 
             # 获取数据文件信息
@@ -241,26 +246,28 @@ class RLMenu:
         if not cnt_downloaded == 0:
             RLDataFiles.load_data_files()
 
-        RLDebug.debug("数据文件同步完成"
-                      "\n在云端共发现了{}个数据文件"
-                      "\n其中{}个数据文件已是最新"
-                      "\n{}个数据文件有变动"
-                      "\n{}个数据文件在本地不存在"
-                      "\n本次同步共下载了{}个数据文件".format(cnt_found, cnt_existed, cnt_changed, cnt_new, cnt_downloaded),
+        sync_report = "数据文件同步完成" \
+                      "\n在云端共发现了{}个数据文件".format(cnt_found)
+
+        if cnt_found == cnt_existed:
+            sync_report += "\n所有数据文件已是最新！"
+        else:
+            sync_report += "\n其中{}个数据文件已是最新".format(cnt_existed)
+
+        if cnt_changed != 0:
+            sync_report += "\n{}个数据文件有变动".format(cnt_changed)
+
+        if cnt_new != 0:
+            sync_report += "\n{}个数据文件在本地不存在".format(cnt_new)
+
+        if cnt_downloaded != 0:
+            sync_report += "\n本次同步共下载了{}个数据文件".format(cnt_downloaded)
+
+        RLDebug.debug(sync_report,
                       type='success',
                       who=self.__class__.__name__)
 
-        QMessageBox.information(self.ui, "数据文件同步完成",
-                                "在云端共发现了{}个数据文件"
-                                "\n其中{}个数据文件已是最新"
-                                "\n{}个数据文件有变动"
-                                "\n{}个数据文件在本地不存在"
-                                "\n本次同步共下载了{}个数据文件".format(
-                                    cnt_found,
-                                    cnt_existed,
-                                    cnt_changed,
-                                    cnt_new,
-                                    cnt_downloaded))
+        QMessageBox.information(self.ui, "数据文件同步完成", sync_report)
 
     @staticmethod
     def downloadDataFiles(url, name) -> bool:

@@ -45,6 +45,7 @@ class RLDebug:
                         'Player': '@玩家信息',
                         'Items': '@藏品信息',
                         'Conditions': '@检定模块',
+                        'RLGame': '@游戏界面',
                         }
 
         info_from = "@未知来源"

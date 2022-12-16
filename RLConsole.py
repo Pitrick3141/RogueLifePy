@@ -3,6 +3,7 @@ import os
 
 import RLConditions
 import RLDataFiles
+import RLGame
 import RLRescue
 import RLDebug
 import global_var
@@ -47,7 +48,8 @@ class RLConsole:
                               '格式化数据文件',
                               '判断基本语句',
                               '判断复合语句',
-                              '测试复合语句拆分']
+                              '测试复合语句拆分',
+                              '游戏页面成功率测试']
         self.coefficients_list = [('物品序号', None),
                                   (None, None),
                                   ("修正名称", "修正值"),
@@ -55,7 +57,9 @@ class RLConsole:
                                   ('文件名', None),
                                   ('语句', None),
                                   ('语句', None),
-                                  ('语句', None)]
+                                  ('语句', None),
+                                  ('当前', '需要'),
+                                  ]
         for command in self.commands_list:
             self.ui.listCommand.addItem(command)
         RLDebug.debug("控制台初始化完成", type='success', who=self.__class__.__name__)
@@ -109,6 +113,8 @@ class RLConsole:
                 RLDebug.debug("判断完毕，最终结果为假", type='success', who=self.__class__.__name__)
         elif self.current_command_index == 7:
             RLConditions.test_parse(RLConditions.parse_conditions(self.coefficient_1)[0], 0)
+        elif self.current_command_index == 8:
+            RLGame.rlGame.set_check_rate(int(self.coefficient_1), int(self.coefficient_2))
 
     def coefficient1Edit(self):
         self.coefficient_1 = self.ui.lineEditCoef1.text()
