@@ -1,10 +1,13 @@
 import os
+import random
 import time
 from threading import Thread
 
+from PySide2.QtGui import QIcon
 from PySide2.QtUiTools import QUiLoader
 from PySide2extn.RoundProgressBar import roundProgressBar
 
+import RLConsole
 import RLDebug
 import RLRescue
 import global_var
@@ -28,7 +31,15 @@ class RLGame:
         # 绑定按钮事件
         self.ui.buttonContinue.clicked.connect(self.forward)
         self.ui.buttonReroll.clicked.connect(self.re_roll_dice)
-        self.ui.buttonExtra.clicked.connect(self.extra_dice)
+
+        # 绑定选择框事件
+        self.ui.checkExtra.stateChanged.connect(self.extra_dice)
+
+        # 绑定菜单事件
+        self.ui.actionShowCollections.triggered.connect(self.show_collections)
+        self.ui.actionShowAdjustments.triggered.connect(self.show_adjustments)
+        self.ui.actionShowCurrentAdjustments.triggered.connect(self.show_current_adjustments)
+        self.ui.actionConsole.triggered.connect(self.show_console)
 
         # 检定圆环
         self.progress_check = roundProgressBar(self.ui)
@@ -44,17 +55,90 @@ class RLGame:
         self.dice_num = 2
         # 骰子成功率
         self.dice_possibility = [[]]
+        # 投出的骰子
+        self.dices = []
+
+        # 设定不可见
+        self.ui.labelExtra.setVisible(False)
 
         RLDebug.debug("游戏界面初始化完成", type='success', who=self.__class__.__name__)
 
     def forward(self):
         self.round_progress_reset()
 
+    def roll_dice(self):
+        self.ui.dice1.setIcon(QIcon())
+        self.ui.dice2.setIcon(QIcon())
+        self.ui.dice3.setIcon(QIcon())
+        self.ui.labelExtra.setVisible(False)
+        self.ui.labelRolled.setStyleSheet("")
+        self.ui.labelRolled.setText("")
+        self.ui.buttonReroll.setEnabled(False)
+        self.ui.checkExtra.setEnabled(False)
+        if self.dice_num == 2:
+            self.dices = [random.randint(1, 6), random.randint(1, 6)]
+        elif self.dice_num == 3:
+            self.dices = [random.randint(1, 6), random.randint(1, 6), random.randint(1, 6)]
+        thr = Thread(target=self.dice_animate)
+        thr.start()
+
+    def dice_animate(self):
+        dice_interval = 0.1
+        dice_repeat = [random.randint(5, 15), random.randint(5, 15)]
+        repeat_max = max(dice_repeat[0], dice_repeat[1])
+        for i in range(repeat_max + 1):
+            if dice_repeat[0] > i:
+                dice1_img = random.randint(1, 6)
+                self.ui.dice1.setIcon(QIcon(os.path.join('ui', 'dices', 'inverted-dice-{}.png'.format(dice1_img))))
+            else:
+                self.ui.dice1.setIcon(QIcon(os.path.join('ui', 'dices', 'inverted-dice-{}.png'.format(self.dices[0]))))
+            if dice_repeat[1] > i:
+                dice2_img = random.randint(1, 6)
+                self.ui.dice2.setIcon(QIcon(os.path.join('ui', 'dices', 'inverted-dice-{}.png'.format(dice2_img))))
+            else:
+                self.ui.dice2.setIcon(QIcon(os.path.join('ui', 'dices', 'inverted-dice-{}.png'.format(self.dices[1]))))
+            time.sleep(dice_interval)
+        time.sleep(dice_interval * 5)
+        self.ui.dice1.setIcon(QIcon(os.path.join('ui', 'dices', 'dice-{}.png'.format(self.dices[0]))))
+        self.ui.dice2.setIcon(QIcon(os.path.join('ui', 'dices', 'dice-{}.png'.format(self.dices[1]))))
+
+        if self.dice_num == 3:
+            self.ui.labelExtra.setVisible(True)
+            for i in range(random.randint(10, 20)):
+                dice3_img = random.randint(1, 6)
+                self.ui.dice3.setIcon(QIcon(os.path.join('ui', 'dices', 'inverted-dice-{}.png'.format(dice3_img))))
+                time.sleep(dice_interval)
+            self.ui.dice3.setIcon(QIcon(os.path.join('ui', 'dices', 'inverted-dice-{}.png'.format(self.dices[2]))))
+            time.sleep(dice_interval * 5)
+            self.ui.dice3.setIcon(QIcon(os.path.join('ui', 'dices', 'dice-{}.png'.format(self.dices[2]))))
+        if self.dices[0] == 6 and self.dices[1] == 6:
+            self.ui.labelRolled.setStyleSheet("background-color: green")
+            self.ui.labelRolled.setText("骰子大成功")
+        elif self.dices[0] == 1 and self.dices[1] == 1:
+            self.ui.labelRolled.setStyleSheet("background-color: red")
+            self.ui.labelRolled.setText("骰子大失败")
+        elif self.dice_num == 3:
+            self.ui.labelRolled.setText("骰子点数: {} + {} + {}(额外骰子) = {}"
+                                        .format(self.dices[0],
+                                                self.dices[1],
+                                                self.dices[2],
+                                                self.dices[0] + self.dices[1] + self.dices[2]))
+        else:
+            self.ui.labelRolled.setText("骰子点数: {} + {} = {}"
+                                        .format(self.dices[0],
+                                                self.dices[1],
+                                                self.dices[0] + self.dices[1]))
+        self.ui.buttonReroll.setEnabled(True)
+        self.ui.checkExtra.setEnabled(True)
+
     def re_roll_dice(self):
-        pass
+        self.roll_dice()
 
     def extra_dice(self):
-        pass
+        if self.ui.checkExtra.isChecked():
+            self.dice_num = 3
+        else:
+            self.dice_num = 2
 
     def set_check_rate(self, current, required):
         self.progress_check.setVisible(True)
@@ -63,7 +147,9 @@ class RLGame:
         total = 6 ** self.dice_num
         possibility = [[35, 35, 35, 35, 33, 30, 26, 21, 15, 10, 6, 3, 1],
                        [215, 215, 215, 215, 215, 212, 206, 196, 181, 160, 135, 108, 81, 56, 35, 20, 10, 4, 1]]
-        if needed <= self.dice_num * 6:
+        if needed <= 0:
+            current_possibility = total - 1
+        elif needed <= self.dice_num * 6:
             current_possibility = possibility[self.dice_num - 2][needed]
         else:
             current_possibility = 1
@@ -79,10 +165,11 @@ class RLGame:
     def round_progress_animate(self, target, maximum):
         rate = 1
         value = 0
+        animate_interval = 0.03
         while value + rate < target:
             self.progress_check.rpb_setValue(round(value + rate))
             value += rate
-            time.sleep(0.03)
+            time.sleep(animate_interval)
             self.update_round_progress(value + rate, maximum)
         self.progress_check.rpb_setValue(target)
         self.update_round_progress(value + rate, maximum)
@@ -130,6 +217,20 @@ class RLGame:
         self.ui.labelPossibility.setVisible(False)
         self.progress_check.rpb_setValue(0)
         self.progress_check.rpb_setMaximum(100)
+
+    def show_collections(self):
+        self.ui.stackedWidget.setCurrentIndex(0)
+
+    def show_adjustments(self):
+        self.ui.stackedWidget.setCurrentIndex(1)
+
+    def show_current_adjustments(self):
+        self.ui.stackedWidget.setCurrentIndex(2)
+
+    @staticmethod
+    def show_console():
+        # 显示控制台
+        RLConsole.display()
 
 
 def init():

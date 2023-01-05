@@ -59,16 +59,6 @@
      <string>继续</string>
     </property>
    </widget>
-   <widget class="QGraphicsView" name="graphicsView">
-    <property name="geometry">
-     <rect>
-      <x>310</x>
-      <y>31</y>
-      <width>481</width>
-      <height>201</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="labelEvent">
     <property name="geometry">
      <rect>
@@ -92,7 +82,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>行动</string>
+     <string>可选行动</string>
     </property>
    </widget>
    <widget class="QLabel" name="labelCheck">
@@ -120,7 +110,7 @@
     <property name="currentIndex">
      <number>0</number>
     </property>
-    <widget class="QWidget" name="page">
+    <widget class="QWidget" name="pageCollections">
      <widget class="QListWidget" name="listItems">
       <property name="geometry">
        <rect>
@@ -145,7 +135,7 @@
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="page_2">
+    <widget class="QWidget" name="pageAdjustments">
      <widget class="QListWidget" name="listAdjustments">
       <property name="geometry">
        <rect>
@@ -170,6 +160,31 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="pageCurrentAdjuetments">
+     <widget class="QLabel" name="labelCurrentAdjustments">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>201</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>当前生效的修正列表(含修正系数)</string>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="listAdjustments_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>351</width>
+        <height>291</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QPushButton" name="buttonReroll">
     <property name="geometry">
@@ -182,19 +197,6 @@
     </property>
     <property name="text">
      <string>重骰</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="buttonExtra">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>240</y>
-      <width>111</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>额外骰子</string>
     </property>
    </widget>
    <widget class="QTextBrowser" name="textInfo">
@@ -245,6 +247,169 @@
      <number>0</number>
     </property>
    </widget>
+   <widget class="QPushButton" name="dice1">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>30</y>
+      <width>64</width>
+      <height>64</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:none;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>64</width>
+      <height>64</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="dice2">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>30</y>
+      <width>64</width>
+      <height>64</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:none;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>64</width>
+      <height>64</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="dice3">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>30</y>
+      <width>64</width>
+      <height>64</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border:none;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>64</width>
+      <height>64</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkExtra">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>280</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>额外骰子</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelRequired">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>100</y>
+      <width>380</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>需求点数</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelPossessed">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>130</y>
+      <width>380</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>已有点数</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelRolled">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>160</y>
+      <width>380</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelTotal">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>190</y>
+      <width>380</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>总计点数</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelExtra">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>10</y>
+      <width>54</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>额外骰子</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelResult">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>220</y>
+      <width>380</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>检定结果</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -255,8 +420,44 @@
      <height>23</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuDisplay">
+    <property name="title">
+     <string>切换查看列表</string>
+    </property>
+    <addaction name="actionShowCollections"/>
+    <addaction name="actionShowAdjustments"/>
+    <addaction name="actionShowCurrentAdjustments"/>
+   </widget>
+   <widget class="QMenu" name="menuDebug">
+    <property name="title">
+     <string>调试</string>
+    </property>
+    <addaction name="actionConsole"/>
+   </widget>
+   <addaction name="menuDisplay"/>
+   <addaction name="menuDebug"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionShowCollections">
+   <property name="text">
+    <string>藏品列表</string>
+   </property>
+  </action>
+  <action name="actionShowAdjustments">
+   <property name="text">
+    <string>修正列表</string>
+   </property>
+  </action>
+  <action name="actionShowCurrentAdjustments">
+   <property name="text">
+    <string>当前生效的修正列表</string>
+   </property>
+  </action>
+  <action name="actionConsole">
+   <property name="text">
+    <string>Console</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
