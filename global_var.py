@@ -10,6 +10,15 @@ global _app_icon
 # 藏品列表
 global items_list
 
+# 事件列表
+global events_list
+
+# 挑战列表
+global challenges_list
+
+# 行动列表
+global actions_list
+
 # 玩家信息
 global player_info
 global save_name
@@ -35,6 +44,18 @@ def init():
     # 初始化藏品列表
     global items_list
     items_list = {}
+
+    # 初始化事件列表
+    global events_list
+    events_list = {}
+
+    # 初始化挑战列表
+    global challenges_list
+    challenges_list = {}
+
+    # 初始化行动列表
+    global actions_list
+    actions_list = {}
 
     # 初始化配置项
     global configs

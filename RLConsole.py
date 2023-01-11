@@ -32,13 +32,15 @@ class RLConsole:
         # 绑定输入框事件
         self.ui.lineEditCoef1.textEdited.connect(self.coefficient1Edit)
         self.ui.lineEditCoef2.textEdited.connect(self.coefficient2Edit)
+        self.ui.lineEditCoef3.textEdited.connect(self.coefficient3Edit)
 
         # 设定参数
-        self.set_coefficient((None, None))
+        self.set_coefficient((None, None, None))
 
         self.current_command_index = -1
         self.coefficient_1 = ""
         self.coefficient_2 = ""
+        self.coefficient_3 = ""
 
         # 命令列表
         self.commands_list = ['获取物品',
@@ -49,16 +51,19 @@ class RLConsole:
                               '判断基本语句',
                               '判断复合语句',
                               '测试复合语句拆分',
-                              '游戏页面成功率测试']
-        self.coefficients_list = [('物品序号', None),
-                                  (None, None),
-                                  ("修正名称", "修正值"),
-                                  (None, None),
-                                  ('文件名', None),
-                                  ('语句', None),
-                                  ('语句', None),
-                                  ('语句', None),
-                                  ('当前', '需要'),
+                              '游戏页面成功率测试',
+                              '投掷骰子测试',
+                              ]
+        self.coefficients_list = [('物品序号', None, None),
+                                  (None, None, None),
+                                  ("修正名称", "修正值", None),
+                                  (None, None, None),
+                                  ('文件名', None, None),
+                                  ('语句', None, None),
+                                  ('语句', None, None),
+                                  ('语句', None, None),
+                                  ('当前', '需要', None),
+                                  ('骰子1', '骰子2', '额外骰子'),
                                   ]
         for command in self.commands_list:
             self.ui.listCommand.addItem(command)
@@ -67,11 +72,12 @@ class RLConsole:
     def commandChange(self):
         self.ui.lineEditCoef1.clear()
         self.ui.lineEditCoef2.clear()
+        self.ui.lineEditCoef3.clear()
         self.current_command_index = self.ui.listCommand.currentRow()
         self.set_coefficient(self.coefficients_list[self.current_command_index])
 
     def set_coefficient(self, coefficients):
-        (coefficient_1, coefficient_2) = coefficients
+        (coefficient_1, coefficient_2, coefficient_3) = coefficients
         if coefficient_1 is None:
             self.ui.lineEditCoef1.setVisible(False)
             self.ui.labelCoef1.setVisible(False)
@@ -86,6 +92,13 @@ class RLConsole:
             self.ui.lineEditCoef2.setVisible(True)
             self.ui.labelCoef2.setVisible(True)
             self.ui.labelCoef2.setText(coefficient_2)
+        if coefficient_3 is None:
+            self.ui.lineEditCoef3.setVisible(False)
+            self.ui.labelCoef3.setVisible(False)
+        else:
+            self.ui.lineEditCoef3.setVisible(True)
+            self.ui.labelCoef3.setVisible(True)
+            self.ui.labelCoef3.setText(coefficient_3)
 
     def runCommand(self):
         if self.current_command_index == -1:
@@ -115,12 +128,17 @@ class RLConsole:
             RLConditions.test_parse(RLConditions.parse_conditions(self.coefficient_1)[0], 0)
         elif self.current_command_index == 8:
             RLGame.rlGame.set_check_rate(int(self.coefficient_1), int(self.coefficient_2))
+        elif self.current_command_index == 9:
+            RLGame.rlGame.roll_dice(manipulate=[int(self.coefficient_1), int(self.coefficient_2), int(self.coefficient_3)])
 
     def coefficient1Edit(self):
         self.coefficient_1 = self.ui.lineEditCoef1.text()
 
     def coefficient2Edit(self):
         self.coefficient_2 = self.ui.lineEditCoef2.text()
+
+    def coefficient3Edit(self):
+        self.coefficient_3 = self.ui.lineEditCoef3.text()
 
     @staticmethod
     def showDebug():

@@ -47,7 +47,7 @@ def load_items(item_file):
         # 如果有缺失的关键键值对
         if not len(missed_keys) == 0:
             RLDebug.debug("已损坏的数据文件：{0}, 缺失如下键值对:{1}, 跳过当前数据文件".format(
-                item.name, missed_keys),
+                item_file.get('name'), missed_keys),
                 type='error', who='Items')
             return
         new_item = Item(item.get("index"),

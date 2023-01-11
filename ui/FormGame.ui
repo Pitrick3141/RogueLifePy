@@ -226,7 +226,7 @@
     <property name="geometry">
      <rect>
       <x>790</x>
-      <y>30</y>
+      <y>20</y>
       <width>200</width>
       <height>31</height>
      </rect>
@@ -336,7 +336,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>需求点数</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="labelPossessed">
@@ -352,7 +352,7 @@
      <string notr="true"/>
     </property>
     <property name="text">
-     <string>已有点数</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="labelRolled">

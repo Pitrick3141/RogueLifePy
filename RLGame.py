@@ -66,7 +66,7 @@ class RLGame:
     def forward(self):
         self.round_progress_reset()
 
-    def roll_dice(self):
+    def roll_dice(self, **kwargs):
         self.ui.dice1.setIcon(QIcon())
         self.ui.dice2.setIcon(QIcon())
         self.ui.dice3.setIcon(QIcon())
@@ -75,10 +75,14 @@ class RLGame:
         self.ui.labelRolled.setText("")
         self.ui.buttonReroll.setEnabled(False)
         self.ui.checkExtra.setEnabled(False)
-        if self.dice_num == 2:
+        if kwargs.get('manipulate') is not None:
+            self.dices = [kwargs['manipulate'][0] if 1 <= kwargs['manipulate'][0] <= 6 else random.randint(1, 6),
+                          kwargs['manipulate'][1] if 1 <= kwargs['manipulate'][0] <= 6 else random.randint(1, 6),
+                          kwargs['manipulate'][2] if 1 <= kwargs['manipulate'][0] <= 6 else random.randint(1, 6)]
+        else:
             self.dices = [random.randint(1, 6), random.randint(1, 6)]
-        elif self.dice_num == 3:
-            self.dices = [random.randint(1, 6), random.randint(1, 6), random.randint(1, 6)]
+        if self.dice_num == 3:
+            self.dices.append(random.randint(1, 6))
         thr = Thread(target=self.dice_animate)
         thr.start()
 
@@ -99,8 +103,15 @@ class RLGame:
                 self.ui.dice2.setIcon(QIcon(os.path.join('ui', 'dices', 'inverted-dice-{}.png'.format(self.dices[1]))))
             time.sleep(dice_interval)
         time.sleep(dice_interval * 5)
-        self.ui.dice1.setIcon(QIcon(os.path.join('ui', 'dices', 'dice-{}.png'.format(self.dices[0]))))
-        self.ui.dice2.setIcon(QIcon(os.path.join('ui', 'dices', 'dice-{}.png'.format(self.dices[1]))))
+        if self.dices[0] == 6 and self.dices[1] == 6:
+            self.ui.dice1.setIcon(QIcon(os.path.join('ui', 'dices', 'dice-6-green.png')))
+            self.ui.dice2.setIcon(QIcon(os.path.join('ui', 'dices', 'dice-6-green.png')))
+        elif self.dices[0] == 1 and self.dices[1] == 1:
+            self.ui.dice1.setIcon(QIcon(os.path.join('ui', 'dices', 'dice-1-red.png')))
+            self.ui.dice2.setIcon(QIcon(os.path.join('ui', 'dices', 'dice-1-red.png')))
+        else:
+            self.ui.dice1.setIcon(QIcon(os.path.join('ui', 'dices', 'dice-{}.png'.format(self.dices[0]))))
+            self.ui.dice2.setIcon(QIcon(os.path.join('ui', 'dices', 'dice-{}.png'.format(self.dices[1]))))
 
         if self.dice_num == 3:
             self.ui.labelExtra.setVisible(True)
@@ -141,38 +152,43 @@ class RLGame:
             self.dice_num = 2
 
     def set_check_rate(self, current, required):
+        self.ui.labelRequired.setText("需求点数: {}".format(required))
+        self.ui.labelPossessed.setText("已有点数: {}".format(current))
         self.progress_check.setVisible(True)
         self.ui.labelPossibility.setVisible(True)
         needed = required-current
         total = 6 ** self.dice_num
+        current_possibility = 0
         possibility = [[35, 35, 35, 35, 33, 30, 26, 21, 15, 10, 6, 3, 1],
                        [215, 215, 215, 215, 215, 212, 206, 196, 181, 160, 135, 108, 81, 56, 35, 20, 10, 4, 1]]
         if needed <= 0:
-            current_possibility = total - 1
+            current_possibility = total * 35 / 36
         elif needed <= self.dice_num * 6:
             current_possibility = possibility[self.dice_num - 2][needed]
-        else:
-            current_possibility = 1
+        if current_possibility < total / 36 or needed > self.dice_num * 6:
+            current_possibility = total / 36
         self.progress_check.rpb_setMaximum(total)
 
-        thr = Thread(target=self.round_progress_animate, args=(current_possibility, total))
+        thr = Thread(target=self.round_progress_animate, args=(current_possibility,))
         thr.start()
+
+        self.update_round_progress(current_possibility, total)
 
         RLDebug.debug("当前已有点数{},需要点数{},检定成功率{}%".format(
             current, required, float(current_possibility)/total*100),
             who=self.__class__.__name__)
 
-    def round_progress_animate(self, target, maximum):
+    def round_progress_animate(self, target):
         rate = 1
+        if self.dice_num == 3:
+            rate = 6
         value = 0
         animate_interval = 0.03
         while value + rate < target:
             self.progress_check.rpb_setValue(round(value + rate))
             value += rate
             time.sleep(animate_interval)
-            self.update_round_progress(value + rate, maximum)
         self.progress_check.rpb_setValue(target)
-        self.update_round_progress(value + rate, maximum)
 
     def update_round_progress(self, value, maximum):
         if float(value) / maximum >= 0.95:

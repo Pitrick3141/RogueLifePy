@@ -5,7 +5,10 @@ import time
 
 from PySide2.QtWidgets import QMessageBox, QMainWindow
 
+import RLActions
+import RLChallenges
 import RLDebug
+import RLEvents
 import RLItems
 import RLPlayer
 import RLUtility
@@ -107,6 +110,24 @@ def load_data_files():
                         RLDebug.debug("发现物品数据文件：{0}, 开始解析".format(display_name),
                                       who='DataFiles')
                         RLItems.load_items(data)
+
+                    # 检测是否是事件数据文件
+                    if data.get('type') == 'event':
+                        RLDebug.debug("发现物品数据文件：{0}, 开始解析".format(display_name),
+                                      who='DataFiles')
+                        RLEvents.load_events(data)
+
+                    # 检测是否是挑战数据文件
+                    if data.get('type') == 'challenge':
+                        RLDebug.debug("发现挑战数据文件：{0}, 开始解析".format(display_name),
+                                      who='DataFiles')
+                        RLChallenges.load_challenges(data)
+
+                    # 检测是否是行动数据文件
+                    if data.get('type') == 'action':
+                        RLDebug.debug("发现行动数据文件：{0}, 开始解析".format(display_name),
+                                      who='DataFiles')
+                        RLActions.load_actions(data)
 
                     # 检测是否是玩家信息存档文件
                     if data.get('type') == 'player':

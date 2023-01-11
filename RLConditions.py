@@ -166,3 +166,7 @@ def check(conditions: list) -> bool:
             else:
                 return False
     return result
+
+
+def check_conditions(condition: str) -> bool:
+    return check(parse_conditions(condition))
