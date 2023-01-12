@@ -5,7 +5,7 @@ from RLCollections import Collections
 
 class Actions(Collections):
     def __init__(self, index: int, name: str, des: str, req: int, adj: dict, suc: int, fai: int):
-        super(Actions, self).__init__(index, name, "", des, False)
+        super(Actions, self).__init__(index, name, des, "", False)
 
         # 成功需要的点数
         self.required_points = req

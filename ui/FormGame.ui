@@ -378,7 +378,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>总计点数</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="labelExtra">
@@ -407,7 +407,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>检定结果</string>
+     <string/>
     </property>
    </widget>
   </widget>

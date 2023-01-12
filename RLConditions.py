@@ -99,7 +99,6 @@ def check_logic(condition: str) -> bool:
 
 def parse_conditions(condition: str) -> (list, int):
     # 将符合条件语句拆分成基本条件语句
-
     # 拆分后的条件判断语句
     parsed_conditions = []
     # 总语句的长度
@@ -130,6 +129,9 @@ def parse_conditions(condition: str) -> (list, int):
             return parsed_conditions, i
         else:
             continue
+    if condition[current:] != "":
+        parsed_conditions.append(condition[current:])
+    RLDebug.debug("已将语句{}拆分为{}".format(condition, parsed_conditions), type='success', who="Conditions")
     return parsed_conditions, i
 
 
@@ -169,4 +171,10 @@ def check(conditions: list) -> bool:
 
 
 def check_conditions(condition: str) -> bool:
-    return check(parse_conditions(condition))
+    RLDebug.debug("开始判定条件语句{}".format(condition), type='info', who="Conditions")
+    if check(parse_conditions(condition)[0]):
+        RLDebug.debug("判定结束，{}的判定结果为真".format(condition), type='success', who="Conditions")
+        return True
+    else:
+        RLDebug.debug("判定结束，{}的判定结果为假".format(condition), type='success', who="Conditions")
+        return False

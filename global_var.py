@@ -9,9 +9,13 @@ global _app_icon
 
 # 藏品列表
 global items_list
+global items_weight_list
+global random_items
 
 # 事件列表
 global events_list
+global events_weight_list
+global random_events
 
 # 挑战列表
 global challenges_list
@@ -44,10 +48,18 @@ def init():
     # 初始化藏品列表
     global items_list
     items_list = {}
+    global items_weight_list
+    items_weight_list = {}
+    global random_items
+    random_items = None
 
     # 初始化事件列表
     global events_list
     events_list = {}
+    global events_weight_list
+    events_weight_list = {}
+    global random_events
+    random_events = None
 
     # 初始化挑战列表
     global challenges_list

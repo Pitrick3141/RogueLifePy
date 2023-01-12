@@ -1,4 +1,5 @@
 import RLDebug
+import RLRandom
 from RLCollections import Collections
 import global_var
 
@@ -6,7 +7,7 @@ import global_var
 class Events(Collections):
     # 事件类
     def __init__(self, index: int, name: str, rare: int, des: str, actions: list, exclusive=False):
-        super(Events, self).__init__(index, name, "", des, exclusive)
+        super(Events, self).__init__(index, name, des, "", exclusive)
         # 稀有度
         self.rare = rare
 
@@ -73,10 +74,12 @@ def load_events(event_file):
             new_event.require = event.get("require")
         if new_event.index not in global_var.events_list.keys():
             global_var.events_list[new_event.index] = new_event
+            global_var.events_weight_list[new_event.index] = new_event.rare
             cnt += 1
-            RLDebug.debug("载入了序号为{}的事件{}".format(
+            RLDebug.debug("载入了序号为{}的事件{}【出现概率{}】".format(
                 new_event.index,
-                new_event.name),
+                new_event.name,
+                new_event.rare),
                 type='success', who='Events')
         else:
             RLDebug.debug("无法载入序号为{}的事件{}: 相同编号的事件{}已存在".format(
@@ -86,3 +89,10 @@ def load_events(event_file):
             ), type='error', who='Events')
 
     RLDebug.debug("事件文件加载完成，共载入了{}个事件".format(cnt), type='success', who='Events')
+    initialize_random_event()
+
+
+def initialize_random_event():
+    global_var.random_events = RLRandom.WeightedRandom()
+    global_var.random_events.random_initialize(global_var.events_weight_list)
+    RLDebug.debug("事件随机器初始化完毕", type='success', who='Events')

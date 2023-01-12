@@ -53,6 +53,8 @@ class RLConsole:
                               '测试复合语句拆分',
                               '游戏页面成功率测试',
                               '投掷骰子测试',
+                              '随机抽取事件',
+                              '随机抽取藏品',
                               ]
         self.coefficients_list = [('物品序号', None, None),
                                   (None, None, None),
@@ -64,6 +66,8 @@ class RLConsole:
                                   ('语句', None, None),
                                   ('当前', '需要', None),
                                   ('骰子1', '骰子2', '额外骰子'),
+                                  (None, None, None),
+                                  (None, None, None),
                                   ]
         for command in self.commands_list:
             self.ui.listCommand.addItem(command)
@@ -130,6 +134,18 @@ class RLConsole:
             RLGame.rlGame.set_check_rate(int(self.coefficient_1), int(self.coefficient_2))
         elif self.current_command_index == 9:
             RLGame.rlGame.roll_dice(manipulate=[int(self.coefficient_1), int(self.coefficient_2), int(self.coefficient_3)])
+        elif self.current_command_index == 10:
+            rand_index = global_var.random_events.get_random_index()
+            RLDebug.debug("随机到了序号为{}的事件{}【抽取概率{}】"
+                          .format(rand_index,
+                                  global_var.events_list[rand_index].name,
+                                  global_var.events_list[rand_index].rare), who=self.__class__.__name__)
+        elif self.current_command_index == 11:
+            rand_index = global_var.random_items.get_random_index()
+            RLDebug.debug("随机到了序号为{}的藏品{}【抽取概率{}】"
+                          .format(rand_index,
+                                  global_var.items_list[rand_index].name,
+                                  global_var.items_list[rand_index].rare), who=self.__class__.__name__)
 
     def coefficient1Edit(self):
         self.coefficient_1 = self.ui.lineEditCoef1.text()

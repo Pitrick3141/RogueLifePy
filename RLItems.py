@@ -1,4 +1,5 @@
 import RLDebug
+import RLRandom
 from RLCollections import Collections
 import global_var
 
@@ -66,10 +67,12 @@ def load_items(item_file):
             new_item.require = item.get("require")
         if new_item.index not in global_var.items_list.keys():
             global_var.items_list[new_item.index] = new_item
+            global_var.items_weight_list[new_item.index] = new_item.rare
             cnt += 1
-            RLDebug.debug("载入了序号为{}的藏品{}".format(
+            RLDebug.debug("载入了序号为{}的藏品{}【出现概率{}】".format(
                 new_item.index,
-                new_item.name),
+                new_item.name,
+                new_item.rare),
                 type='success', who='Items')
         else:
             RLDebug.debug("无法载入序号为{}的藏品{}: 相同编号的藏品{}已存在".format(
@@ -79,3 +82,10 @@ def load_items(item_file):
             ), type='error', who='Items')
 
     RLDebug.debug("藏品文件加载完成，共载入了{}个藏品".format(cnt), type='success', who='Items')
+    initialize_random_item()
+
+
+def initialize_random_item():
+    global_var.random_items = RLRandom.WeightedRandom()
+    global_var.random_items.random_initialize(global_var.items_weight_list)
+    RLDebug.debug("藏品随机器初始化完毕", type='success', who='Items')

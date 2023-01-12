@@ -48,7 +48,8 @@ class RLDebug:
                         'RLGame': '@游戏界面',
                         'Events': '@事件信息',
                         'Challenges': '@挑战信息',
-                        'Actions': '@行动信息'
+                        'Actions': '@行动信息',
+                        'WeightedRandom': '@随机数生成器',
                         }
 
         info_from = "@未知来源"
