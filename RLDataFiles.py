@@ -106,25 +106,25 @@ def load_data_files():
                         global_var.configs.applyConfig(data)
 
                     # 检测是否是物品数据文件
-                    if data.get('type') == 'item':
+                    if data.get('type') == 'items':
                         RLDebug.debug("发现物品数据文件：{0}, 开始解析".format(display_name),
                                       who='DataFiles')
                         RLItems.load_items(data)
 
                     # 检测是否是事件数据文件
-                    if data.get('type') == 'event':
+                    if data.get('type') == 'events':
                         RLDebug.debug("发现物品数据文件：{0}, 开始解析".format(display_name),
                                       who='DataFiles')
                         RLEvents.load_events(data)
 
                     # 检测是否是挑战数据文件
-                    if data.get('type') == 'challenge':
+                    if data.get('type') == 'challenges':
                         RLDebug.debug("发现挑战数据文件：{0}, 开始解析".format(display_name),
                                       who='DataFiles')
                         RLChallenges.load_challenges(data)
 
                     # 检测是否是行动数据文件
-                    if data.get('type') == 'action':
+                    if data.get('type') == 'actions':
                         RLDebug.debug("发现行动数据文件：{0}, 开始解析".format(display_name),
                                       who='DataFiles')
                         RLActions.load_actions(data)

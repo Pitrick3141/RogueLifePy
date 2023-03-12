@@ -28,7 +28,7 @@ class Challenges(Collections):
         # 挑战检定
         if RLConditions.check_conditions(self.requirements):
             for adjustment in self.adjustments.keys():
-                global_var.player_info.addAdjustment(adjustment, self.adjustments[adjustment])
+                global_var.player_info.add_adjustment(adjustment, self.adjustments[adjustment])
             RLDebug.debug("挑战{}检定成功，获得了增益并且解锁了额外信息".format(self.name), type='info', who='Challenges')
             return True
         else:

@@ -30,7 +30,10 @@ class RLGame:
 
         # 绑定按钮事件
         self.ui.buttonContinue.clicked.connect(self.forward)
+        self.ui.buttonContinue.setText("开始")
         self.ui.buttonReroll.clicked.connect(self.re_roll_dice)
+        self.ui.buttonReroll.setEnabled(False)
+        self.ui.checkExtra.setEnabled(False)
 
         # 绑定选择框事件
         self.ui.checkExtra.stateChanged.connect(self.extra_dice)
@@ -41,12 +44,15 @@ class RLGame:
         self.ui.actionShowCurrentAdjustments.triggered.connect(self.show_current_adjustments)
         self.ui.actionConsole.triggered.connect(self.show_console)
 
-        # 绑定行动选择事件
+        # 绑定列表框事件
         self.ui.listActions.itemClicked.connect(self.select_action)
+        self.ui.listItems.itemClicked.connect(self.select_item)
+        self.ui.listAdjustments.itemClicked.connect(self.select_adjustment)
+        self.ui.listAdjustments_2.itemClicked.connect(self.select_current_adjustment)
 
         # 检定圆环
         self.progress_check = roundProgressBar(self.ui)
-        self.progress_check.setGeometry(810, 70, 100, 100)
+        self.progress_check.setGeometry(1235, 90, 100, 100)
         self.progress_check.rpb_setMinimumSize(150, 150)
         self.progress_check.rpb_setMaximumSize(150, 150)
         self.progress_check.rpb_setBarStyle('Hybrid1')
@@ -76,13 +82,57 @@ class RLGame:
         # 总计点数
         self.total_points = 0
 
+        # 检定结果
+        # 0 大失败 1 失败 2 成功 3 大成功
+        self.check_result = 0
+
+        # 当前阶段
+        # 0 检定前 1 检定后
+        self.current_stage = 0
+
+        # 显示藏品列表
+        self.ui.stackedWidget.setCurrentIndex(0)
+
         RLDebug.debug("游戏界面初始化完成", type='success', who=self.__class__.__name__)
 
     def forward(self):
-        self.round_progress_reset()
-        self.roll_event()
+        RLDebug.split()
+        RLDebug.debug("点击了前进按钮", type='info', who=self.__class__.__name__)
+        if self.current_stage == 0:
+            if self.current_event is None:
+                RLDebug.debug("当前没有进行中的事件线，抽取新的事件", type='info', who=self.__class__.__name__)
+                self.round_progress_reset()
+                self.roll_event()
+            else:
+                RLDebug.debug("当前是检定阶段，准备掷骰子", type='info', who=self.__class__.__name__)
+                self.ui.listActions.setEnabled(False)
+                self.roll_dice()
+        else:
+            if self.check_result == 0:
+                self.output_message("检定大失败", color='Crimson')
+            elif self.check_result == 1:
+                self.output_message("检定失败", color='Crimson')
+            elif self.check_result == 2:
+                self.output_message("检定成功", color='LimeGreen')
+            elif self.check_result == 3:
+                self.output_message("检定大成功", color='LimeGreen')
+            if self.current_action.success_event == -1 and self.current_action.fail_event == -1:
+                RLDebug.debug("当前事件线已经结束，抽取新的事件", type='info', who=self.__class__.__name__)
+                self.current_stage = 0
+                self.round_progress_reset()
+                self.roll_event()
+            elif self.check_result == 0 or self.check_result == 1:
+                RLDebug.debug("当前检定失败，进入失败事件", type='info', who=self.__class__.__name__)
+                self.event_occur(self.current_action.fail_event)
+            elif self.check_result == 2 or self.check_result == 3:
+                RLDebug.debug("当前检定成功，进入成功事件", type='info', who=self.__class__.__name__)
+                self.event_occur(self.current_action.success_event)
+            else:
+                RLDebug.debug("当前无需检定，进入成功事件", type='info', who=self.__class__.__name__)
+                self.event_occur(self.current_action.success_event)
+        self.ui.buttonContinue.setEnabled(False)
 
-    def roll_dice(self, **kwargs):
+    def check_clear(self):
         self.ui.labelRolled.setVisible(False)
         self.ui.labelTotal.setVisible(False)
         self.ui.labelResult.setVisible(False)
@@ -94,14 +144,24 @@ class RLGame:
         self.ui.labelRolled.setText("")
         self.ui.buttonReroll.setEnabled(False)
         self.ui.checkExtra.setEnabled(False)
+        self.ui.labelRequired.setVisible(False)
+        self.ui.labelPossessed.setVisible(False)
+        self.round_progress_reset()
+
+    def roll_dice(self, **kwargs):
+        self.check_clear()
         if kwargs.get('manipulate') is not None:
             self.dices = [kwargs['manipulate'][0] if 1 <= kwargs['manipulate'][0] <= 6 else random.randint(1, 6),
-                          kwargs['manipulate'][1] if 1 <= kwargs['manipulate'][0] <= 6 else random.randint(1, 6),
-                          kwargs['manipulate'][2] if 1 <= kwargs['manipulate'][0] <= 6 else random.randint(1, 6)]
+                          kwargs['manipulate'][1] if 1 <= kwargs['manipulate'][1] <= 6 else random.randint(1, 6),
+                          kwargs['manipulate'][2] if 1 <= kwargs['manipulate'][2] <= 6 else random.randint(1, 6)]
+            RLDebug.debug("操控掷出骰子{}, {}和{}".format(self.dices[0], self.dices[1], self.dices[2]), type='info',
+                          who=self.__class__.__name__)
         else:
             self.dices = [random.randint(1, 6), random.randint(1, 6)]
+            RLDebug.debug("掷出骰子{}和{}".format(self.dices[0], self.dices[1]), type='info', who=self.__class__.__name__)
         if self.dice_num == 3:
             self.dices.append(random.randint(1, 6))
+            RLDebug.debug("掷出额外骰子{}".format(self.dices[2]), type='info', who=self.__class__.__name__)
         thr = Thread(target=self.dice_animate)
         thr.start()
 
@@ -169,20 +229,35 @@ class RLGame:
 
         self.total_points = self.current_points + dice_total
         if dice_total == -9999:
+            self.check_result = 0
             self.ui.labelResult.setText("检定结果：大失败")
             self.ui.labelResult.setStyleSheet("QLabel { color : rgb(220, 20, 60); background-color: gold;}")
+            RLDebug.debug("检定结果:大失败", type='info', who=self.__class__.__name__)
+            self.ui.buttonReroll.setEnabled(True)
+            self.ui.checkExtra.setEnabled(True)
         elif dice_total == 9999:
+            self.check_result = 3
             self.ui.labelResult.setText("检定结果：大成功")
             self.ui.labelResult.setStyleSheet("QLabel { color : rgb(34, 139, 34); background-color: gold;}")
+            RLDebug.debug("检定结果:大成功", type='info', who=self.__class__.__name__)
         elif self.total_points >= self.current_action.required_points:
+            self.check_result = 2
             self.ui.labelResult.setText("检定结果：成功")
             self.ui.labelResult.setStyleSheet("QLabel { color : rgb(34, 139, 34); }")
+            RLDebug.debug("检定结果:成功({}/{})".format(self.total_points, self.current_action.required_points),
+                          type='info', who=self.__class__.__name__)
         else:
+            self.check_result = 1
             self.ui.labelResult.setText("检定结果：失败")
             self.ui.labelResult.setStyleSheet("QLabel { color : rgb(220, 20, 60); }")
+            RLDebug.debug("检定结果:失败({}/{})".format(self.total_points, self.current_action.required_points),
+                          type='info', who=self.__class__.__name__)
+            self.ui.buttonReroll.setEnabled(True)
+            self.ui.checkExtra.setEnabled(True)
         self.ui.labelResult.setVisible(True)
-        self.ui.buttonReroll.setEnabled(True)
-        self.ui.checkExtra.setEnabled(True)
+        self.ui.buttonContinue.setEnabled(True)
+        self.ui.buttonContinue.setText("继续")
+        self.current_stage = 1
 
     def re_roll_dice(self):
         self.roll_dice()
@@ -195,11 +270,13 @@ class RLGame:
         self.set_check_rate(self.current_points, self.current_action.required_points)
 
     def set_check_rate(self, current, required):
+        self.ui.labelRequired.setVisible(True)
         self.ui.labelRequired.setText("需求点数: {}".format(required))
+        self.ui.labelPossessed.setVisible(True)
         self.ui.labelPossessed.setText("已有点数: {}".format(current))
         self.progress_check.setVisible(True)
         self.ui.labelPossibility.setVisible(True)
-        needed = required-current
+        needed = round(required-current)
         total = 6 ** self.dice_num
         current_possibility = 0
         possibility = [[35, 35, 35, 35, 33, 30, 26, 21, 15, 10, 6, 3, 1],
@@ -281,17 +358,55 @@ class RLGame:
 
     def roll_event(self):
         rand_index = global_var.random_events.get_random_index()
+        while not global_var.player_info.check_event(rand_index):
+            rand_index = global_var.random_events.get_random_index()
+        global_var.player_info.experienced_events.append(rand_index)
         RLDebug.debug("随机到了序号为{}的事件{}【抽取概率{}】"
                       .format(rand_index,
                               global_var.events_list[rand_index].name,
                               global_var.events_list[rand_index].rare), who=self.__class__.__name__)
-        next_event = global_var.events_list[rand_index]
-        self.outp_message("事件【{}】".format(next_event.name), color='Gray')
-        self.outp_message(next_event.des)
+        self.event_occur(rand_index)
+
+    def event_occur(self, index):
+        next_event = global_var.events_list[index]
+        RLDebug.debug("触发了序号为{}的事件{}".format(next_event.index, next_event.name), type='info', who=self.__class__.__name__)
+        self.output_message("事件【{}】".format(next_event.name), color='Gray')
+        self.output_message(next_event.des)
         self.current_event = next_event
         self.ui.listActions.clear()
         for action in next_event.actions:
             self.ui.listActions.addItem(global_var.actions_list[action].name)
+        for item in next_event.items:
+            messages = []
+            colors = ['SkyBlue']
+            font_weights = ['normal']
+            if item == -1:
+                # 随机抽取物品
+                random_index = global_var.random_items.get_random_index()
+                while not global_var.player_info.check_item(random_index):
+                    random_index = global_var.random_items.get_random_index()
+                messages.append('获得了随机藏品')
+                global_var.player_info.attain_item(random_index)
+                self.ui.listItems.addItem(global_var.items_list.get(random_index).name)
+                messages.append('【{}】'.format(global_var.items_list.get(random_index).name))
+                colors.append('DarkBlue')
+                font_weights.append('bold')
+            else:
+                if global_var.player_info.check_item(item):
+                    messages.append('获得了藏品')
+                    global_var.player_info.attain_item(item)
+                    self.ui.listItems.addItem(global_var.items_list.get(item).name)
+                    messages.append('【{}】'.format(global_var.items_list.get(item).name))
+                    colors.append('DarkBlue')
+                    font_weights.append('bold')
+                else:
+                    messages.append('无法获得藏品')
+                    colors[0] = 'Orange'
+                    messages.append('【{}】'.format(global_var.items_list.get(item).name))
+                    colors.append('DarkBlue')
+                    font_weights.append('bold')
+            self.multiple_color_msg(messages, colors, font_weights)
+            self.show_collections()
         for challenge in next_event.challenges:
             current_challenge = global_var.challenges_list[challenge]
             messages = []
@@ -315,9 +430,19 @@ class RLGame:
                 font_weights.append("bold")
                 challenge_info += current_challenge.fail_info
             self.multiple_color_msg(messages, colors, font_weights)
-            self.outp_message(challenge_info)
+            self.output_message(challenge_info)
+        self.update_adjustment_list()
+        self.output_message("")
+        self.ui.listActions.setEnabled(True)
+        self.current_stage = 0
+        self.check_clear()
 
-    def outp_message(self, msg, **kwargs):
+    def update_adjustment_list(self):
+        self.ui.listAdjustments.clear()
+        for adjustment in global_var.player_info.adjustments.keys():
+            self.ui.listAdjustments.addItem(adjustment)
+
+    def output_message(self, msg, **kwargs):
         msg_type = "span"
         prefix = "<span>"
         suffix = "</span>"
@@ -325,6 +450,14 @@ class RLGame:
             msg_type = kwargs.get('type')
         if 'color' in kwargs:
             prefix = "<{} style=\"color:{};\">".format(msg_type, kwargs.get('color'))
+        if 'bold' in kwargs:
+            if kwargs.get('bold'):
+                prefix = prefix + "<b>"
+                suffix = "</b>" + suffix
+        if 'italic' in kwargs:
+            if kwargs.get('italic'):
+                prefix = prefix + "<i>"
+                suffix = "</i>" + suffix
         if 'info' in kwargs:
             if kwargs.get('info'):
                 self.ui.textInfo.append(prefix + msg + suffix)
@@ -337,34 +470,36 @@ class RLGame:
         else:
             self.ui.textEvent.append(prefix + msg + suffix)
             self.ui.textEvent.moveCursor(self.ui.textEvent.textCursor().End)
-        RLDebug.debug("游戏信息输出:{}".format(msg), who=self.__class__.__name__)
+        # RLDebug.debug("游戏信息输出:{}".format(msg), who=self.__class__.__name__)
 
     def multiple_color_msg(self, messages: list, colors: list, font_weights: list, info=False):
         total_msg = ""
-        total_outp = ""
-        total_outp += "<p>"
+        total_output = ""
+        total_output += "<p>"
         for i in range(len(messages)):
             prefix = "<vi style=\"color:{};font-weight:{};\">".format(colors[i], font_weights[i])
             suffix = "</vi>"
-            total_outp += prefix + messages[i] + suffix
+            total_output += prefix + messages[i] + suffix
             total_msg += messages[i]
-        total_outp += "</p>"
+        total_output += "</p>"
         if info:
-            self.ui.textInfo.append(total_outp)
+            self.ui.textInfo.append(total_output)
             self.ui.textInfo.moveCursor(self.ui.textEvent.textCursor().End)
         else:
-            self.ui.textEvent.append(total_outp)
+            self.ui.textEvent.append(total_output)
             self.ui.textEvent.moveCursor(self.ui.textEvent.textCursor().End)
-        RLDebug.debug("游戏信息输出:{}".format(total_msg), who=self.__class__.__name__)
+        # RLDebug.debug("游戏信息输出:{}".format(total_msg), who=self.__class__.__name__)
 
     def select_action(self):
         self.current_points = 0
         self.ui.textInfo.clear()
+        self.ui.listAdjustments_2.clear()
         action_index = self.current_event.actions[self.ui.listActions.currentRow()]
         self.current_action = global_var.actions_list[action_index]
-        self.outp_message("行动【{}】".format(self.current_action.name), color='Gray', info=True)
-        self.outp_message(self.current_action.des, info=True)
+        self.output_message("行动【{}】".format(self.current_action.name), color='Gray', info=True)
+        self.output_message(self.current_action.des, info=True)
         for adj in self.current_action.available_adj:
+            self.ui.listAdjustments_2.addItem(adj)
             if adj in global_var.player_info.adjustments.keys():
                 extra = global_var.player_info.adjustments.get(adj) * self.current_action.available_adj.get(adj)
                 self.current_points += extra
@@ -373,7 +508,47 @@ class RLGame:
                                       adj,
                                       extra,
                                       self.current_action.available_adj.get(adj)), who=self.__class__.__name__)
-        self.set_check_rate(self.current_points, self.current_action.required_points)
+        if self.current_action.required_points != 0:
+            self.set_check_rate(self.current_points, self.current_action.required_points)
+            self.ui.buttonContinue.setEnabled(True)
+            self.ui.buttonContinue.setText("检定")
+            self.ui.labelCheck.setText("检定")
+            self.show_current_adjustments()
+            self.current_stage = 0
+        else:
+            self.check_clear()
+            self.ui.buttonContinue.setEnabled(True)
+            self.ui.buttonContinue.setText("继续")
+            self.ui.labelCheck.setText("当前无需检定")
+            self.current_stage = 1
+            self.check_result = -1
+
+    def select_item(self):
+        self.ui.textInfo.clear()
+        selected_item_index = global_var.player_info.attained_items[self.ui.listItems.currentRow()]
+        selected_item = global_var.items_list[selected_item_index]
+        self.output_message("藏品【{}】".format(selected_item.name), info=True)
+        self.output_message(selected_item.eff, color='SkyBlue', bold=True, info=True)
+        self.output_message("", info=True)
+        self.output_message(selected_item.des, color='Gray', italic=True, info=True)
+
+    def select_adjustment(self):
+        self.ui.textInfo.clear()
+        adj = self.ui.listAdjustments.currentItem().text()
+        self.output_message("修正【{}】".format(adj), info=True)
+        self.output_message("修正值: " + str(global_var.player_info.adjustments.get(adj)), color='Gray', info=True)
+
+    def select_current_adjustment(self):
+        self.ui.textInfo.clear()
+        adj = self.ui.listAdjustments_2.currentItem().text()
+        coefficient = self.current_action.available_adj.get(adj)
+        val = 0
+        if global_var.player_info.adjustments.get(adj):
+            val = global_var.player_info.adjustments.get(adj)
+        self.output_message("生效的修正【{}】".format(adj), info=True)
+        self.output_message("修正系数: " + str(coefficient), color='Gray', info=True)
+        self.output_message("修正值: " + str(val), color='Gray', info=True)
+        self.output_message("修正得分: " + str(coefficient * val), color='SkyBlue', bold=True, info=True)
 
     def show_collections(self):
         self.ui.stackedWidget.setCurrentIndex(0)

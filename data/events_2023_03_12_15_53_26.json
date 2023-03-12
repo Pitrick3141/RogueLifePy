@@ -1,0 +1,194 @@
+{
+    "name": "events_2023_03_12_15_53_26", 
+    "type": "events", 
+    "enabled": true, 
+    "version": "*", 
+    "events": [
+        {
+            "index": 20000, 
+            "name": "故事背景", 
+            "des": "这个故事是关于一群来自不同背景的冒险家，他们聚集在一起为了共同探险、赚钱和挑战危险。他们刚刚完成了一次探险任务，但是他们的魔法师在这次任务中受了重伤，需要尽快治疗。", 
+            "rare": 100, 
+            "exclusive": false, 
+            "exclude": [
+                20000
+            ], 
+            "require": [], 
+            "challenges": [
+                30000
+            ], 
+            "actions": [
+                40000, 
+                40001
+            ], 
+            "items": [
+                10000, 
+                -1, 
+                -1, 
+                -1
+            ]
+        }, 
+        {
+            "index": 20001, 
+            "name": "剧情概述", 
+            "des": "在寻找疗愈师的过程中，成员们发现了一些可疑的迹象，这引发了他们对一个陌生的村庄的调查。在村庄中，他们发现了一个神秘的教派，该教派似乎在进行某种黑暗仪式，而这仪式可能会威胁到整个区域的安全。跑团成员们必须揭开这个教派的秘密，制止他们的计划，并找到疗愈师所需的药材。", 
+            "rare": 0, 
+            "exclusive": true, 
+            "exclude": [], 
+            "require": [], 
+            "challenges": [
+                30001
+            ], 
+            "actions": [
+                40002
+            ], 
+            "items": []
+        }, 
+        {
+            "index": 20002, 
+            "name": "任务接受", 
+            "des": "小队成员经过初步的讨论，认为应当去寻找一种稀有的药材来治疗受伤的魔法师。", 
+            "rare": 0, 
+            "exclusive": true, 
+            "exclude": [], 
+            "require": [], 
+            "challenges": [], 
+            "actions": [
+                40003, 
+                40004, 
+                40005
+            ], 
+            "items": []
+        }, 
+        {
+            "index": 20003, 
+            "name": "工会的线索", 
+            "des": "小队成员凭借非凡的魅力和话术，从其他冒险小队口中套出了有关药材的线索。", 
+            "rare": 0, 
+            "exclusive": true, 
+            "exclude": [], 
+            "require": [], 
+            "challenges": [], 
+            "actions": [
+                40006, 
+                40007
+            ], 
+            "items": [
+                10008
+            ]
+        }, 
+        {
+            "index": 20004, 
+            "name": "他人的误导", 
+            "des": "小队成员受到了不怀好意的其他冒险家的误导，不仅没有获得任何线索，还浪费了时间。", 
+            "rare": 0, 
+            "exclusive": true, 
+            "exclude": [], 
+            "require": [], 
+            "challenges": [], 
+            "actions": [
+                40006, 
+                40007
+            ], 
+            "items": [
+                10009
+            ]
+        }, 
+        {
+            "index": 20005, 
+            "name": "植物学调查", 
+            "des": "通过种种手段，小队成员调查了药材的特性，列出了几处他可能的生长地点。", 
+            "rare": 0, 
+            "exclusive": true, 
+            "exclude": [], 
+            "require": [], 
+            "challenges": [], 
+            "actions": [
+                40006, 
+                40007
+            ], 
+            "items": [
+                10010
+            ]
+        }, 
+        {
+            "index": 20006, 
+            "name": "无用的调查", 
+            "des": "无论小队成员怎么努力，都无法追查到药材的任何线索，就好像这种事物并不存在。", 
+            "rare": 0, 
+            "exclusive": true, 
+            "exclude": [], 
+            "require": [], 
+            "challenges": [], 
+            "actions": [
+                40006, 
+                40007
+            ], 
+            "items": [
+                10011
+            ]
+        }, 
+        {
+            "index": 20007, 
+            "name": "酒馆闲谈", 
+            "des": "小队成员在嘈杂的酒馆静下心来，专注地询问各个酒客，终于从他们口中得知关于药材的些许线索。", 
+            "rare": 0, 
+            "exclusive": true, 
+            "exclude": [], 
+            "require": [], 
+            "challenges": [], 
+            "actions": [
+                40006, 
+                40007
+            ], 
+            "items": [
+                10012
+            ]
+        }, 
+        {
+            "index": 20008, 
+            "name": "嘈杂的酒馆", 
+            "des": "酒馆过于吵闹，小队成员无法忍受，立即退了出来。", 
+            "rare": 0, 
+            "exclusive": true, 
+            "exclude": [], 
+            "require": [], 
+            "challenges": [], 
+            "actions": [
+                40006, 
+                40007
+            ], 
+            "items": [
+                10013
+            ]
+        }, 
+        {
+            "index": 20009, 
+            "name": "拨云见日", 
+            "des": "经过整合线索和多次尝试，小队成员终于在深山中找到了那一株稀有的药材，终于可以拯救同伴了。", 
+            "rare": 0, 
+            "exclusive": true, 
+            "exclude": [], 
+            "require": [], 
+            "challenges": [], 
+            "actions": [
+                40008
+            ], 
+            "items": []
+        }, 
+        {
+            "index": 20010, 
+            "name": "只在此山中", 
+            "des": "小队成员在深山中漫无目的地寻找，浪费了太多时间，最终魔法师伤重不济…", 
+            "rare": 0, 
+            "exclusive": true, 
+            "exclude": [], 
+            "require": [], 
+            "challenges": [], 
+            "actions": [
+                40009
+            ], 
+            "items": []
+        }
+    ]
+}

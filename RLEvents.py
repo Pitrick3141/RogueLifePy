@@ -14,6 +14,9 @@ class Events(Collections):
         # 挑战列表，通过检定可获得更多信息
         self.challenges = []
 
+        # 藏品列表，经历事件可获得如下的藏品
+        self.items = []
+
         # 选择分支列表，通过选择及检定走向不同结果
         self.actions = actions
 
@@ -25,6 +28,9 @@ class Events(Collections):
 
     def add_challenge(self, challenge):
         self.challenges.append(challenge)
+
+    def add_item(self, item):
+        self.items.append(item)
 
 
 def load_events(event_file):
@@ -68,13 +74,18 @@ def load_events(event_file):
             challenges = event.get("challenges")
             for challenge in challenges:
                 new_event.add_challenge(challenge)
+        if event.get("items"):
+            items = event.get("items")
+            for item in items:
+                new_event.add_item(item)
         if event.get("exclude"):
             new_event.exclude = event.get("exclude")
         if event.get("require"):
             new_event.require = event.get("require")
         if new_event.index not in global_var.events_list.keys():
             global_var.events_list[new_event.index] = new_event
-            global_var.events_weight_list[new_event.index] = new_event.rare
+            if not new_event.exclusive:
+                global_var.events_weight_list[new_event.index] = new_event.rare
             cnt += 1
             RLDebug.debug("载入了序号为{}的事件{}【出现概率{}】".format(
                 new_event.index,

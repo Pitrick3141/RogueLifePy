@@ -7,8 +7,9 @@ class Player:
     def __init__(self):
         self.adjustments = {}
         self.attained_items = []
+        self.experienced_events = []
 
-    def addAdjustment(self, adjustment: str, value: int) -> None:
+    def add_adjustment(self, adjustment: str, value: int) -> None:
         if adjustment not in self.adjustments.keys():
             self.adjustments[adjustment] = value
             RLDebug.debug("获得了修正【{}】,修正值为{}".format(adjustment, value),
@@ -20,28 +21,21 @@ class Player:
 
         return
 
-    def attainItem(self, index: int) -> bool:
-        if index in global_var.items_list.keys():
+    def attain_item(self, index: int) -> bool:
+        if self.check_item(index):
             item = global_var.items_list.get(index)
-            for excluded in item.exclude:
-                if excluded in self.attained_items:
-                    RLDebug.debug("无法获取序号为{}的藏品【{}】: 与序号为{}的藏品【{}】互斥".format(index, item.name, excluded.index, excluded.name),
-                                  type='error', who=self.__class__.__name__)
-                    return False
-            for required in item.require:
-                if required not in self.attained_items:
-                    RLDebug.debug("无法获取序号为{}的藏品【{}】: 需要先获取序号为{}的藏品【{}】".format(index, item.name, required.index, required.name),
-                                  type='error', who=self.__class__.__name__)
             RLDebug.debug("获取了序号为{}的藏品【{}】".format(index, item.name),
                           type='success', who=self.__class__.__name__)
             for adjustment in item.adjustments:
-                self.addAdjustment(adjustment, item.adjustments[adjustment])
+                self.add_adjustment(adjustment, item.adjustments[adjustment])
             self.attained_items.append(item.index)
             return True
         else:
-            RLDebug.debug("无法获取序号为{}的藏品: 不存在该物品".format(index), type='error', who=self.__class__.__name__)
+            RLDebug.debug("无法获取序号为{}的藏品".format(index),
+                          type='error', who=self.__class__.__name__)
+            return False
 
-    def printPlayerInfo(self):
+    def print_player_info(self):
         RLDebug.split()
         RLDebug.debug("玩家信息", who=self.__class__.__name__)
         RLDebug.debug("修正列表:", who=self.__class__.__name__)
@@ -51,8 +45,55 @@ class Player:
         RLDebug.debug("获得的藏品列表:", who=self.__class__.__name__)
         RLDebug.split(1)
         for item in self.attained_items:
-            RLDebug.debug("序号为{}的藏品【{}】".format(item.index, item.name), who=self.__class__.__name__)
+            RLDebug.debug("序号为{}的藏品【{}】".format(item, global_var.items_list[item].name), who=self.__class__.__name__)
+        RLDebug.debug("经历的事件列表:", who=self.__class__.__name__)
+        RLDebug.split(1)
+        for event in self.experienced_events:
+            RLDebug.debug("序号为{}的事件【{}】".format(event, global_var.events_list[event].name),
+                          who=self.__class__.__name__)
         RLDebug.split()
+
+    def check_event(self, index: int) -> bool:
+        if index in global_var.events_list.keys():
+            event = global_var.events_list.get(index)
+            for excluded in event.exclude:
+                if excluded in self.experienced_events:
+                    existing_excluded = global_var.events_list.get(excluded)
+                    RLDebug.debug("无法进行序号为{}的事件【{}】: 与序号为{}的事件【{}】互斥".format(index, event.name, existing_excluded.index, existing_excluded.name),
+                                  type='error', who=self.__class__.__name__)
+                    return False
+            for required in event.require:
+                if required not in self.experienced_events:
+                    missing_required = global_var.events_list.get(required)
+                    RLDebug.debug("无法进行序号为{}的事件【{}】: 需要先进行序号为{}的事件【{}】".format(index, event.name, missing_required.index, missing_required.name),
+                                  type='error', who=self.__class__.__name__)
+                    return False
+            RLDebug.debug("可以进行序号为{}的事件【{}】".format(index, event.name),
+                          type='success', who=self.__class__.__name__)
+            return True
+        else:
+            RLDebug.debug("无法进行序号为{}的事件: 不存在该物品".format(index), type='error', who=self.__class__.__name__)
+            return False
+
+    def check_item(self, index: int) -> bool:
+        if index in global_var.items_list.keys():
+            item = global_var.items_list.get(index)
+            for excluded in item.exclude:
+                if excluded in self.attained_items:
+                    existing_excluded = global_var.items_list.get(excluded)
+                    RLDebug.debug("无法获取序号为{}的藏品【{}】: 与序号为{}的藏品【{}】互斥".format(index, item.name, existing_excluded.index, existing_excluded.name),
+                                  type='error', who=self.__class__.__name__)
+                    return False
+            for required in item.require:
+                if required not in self.attained_items:
+                    missing_required = global_var.items_list.get(required)
+                    RLDebug.debug("无法获取序号为{}的藏品【{}】: 需要先获取序号为{}的藏品【{}】".format(index, item.name, missing_required.index, missing_required.name),
+                                  type='error', who=self.__class__.__name__)
+                    return False
+            return True
+        else:
+            RLDebug.debug("无法获取序号为{}的藏品: 不存在该物品".format(index), type='error', who=self.__class__.__name__)
+            return False
 
 
 def init():

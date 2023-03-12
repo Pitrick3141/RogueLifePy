@@ -7,7 +7,7 @@ import global_var
 class Item(Collections):
     # 藏品类
     def __init__(self, index: int, name: str, eff: str, des: str, rare: int, exclusive=False):
-        super(Item, self).__init__(index, name, eff, des, exclusive)
+        super(Item, self).__init__(index, name, des, eff, exclusive)
         # 稀有度
         self.rare = rare
         # 修正
@@ -67,7 +67,8 @@ def load_items(item_file):
             new_item.require = item.get("require")
         if new_item.index not in global_var.items_list.keys():
             global_var.items_list[new_item.index] = new_item
-            global_var.items_weight_list[new_item.index] = new_item.rare
+            if not new_item.exclusive:
+                global_var.items_weight_list[new_item.index] = new_item.rare
             cnt += 1
             RLDebug.debug("载入了序号为{}的藏品{}【出现概率{}】".format(
                 new_item.index,

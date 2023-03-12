@@ -112,11 +112,11 @@ class RLConsole:
             self.current_command_index,  self.commands_list[self.current_command_index]),
             who=self.__class__.__name__)
         if self.current_command_index == 0:
-            global_var.player_info.attainItem(int(self.coefficient_1))
+            global_var.player_info.attain_item(int(self.coefficient_1))
         elif self.current_command_index == 1:
-            global_var.player_info.printPlayerInfo()
+            global_var.player_info.print_player_info()
         elif self.current_command_index == 2:
-            global_var.player_info.addAdjustment(self.coefficient_1, int(self.coefficient_2))
+            global_var.player_info.add_adjustment(self.coefficient_1, int(self.coefficient_2))
         elif self.current_command_index == 3:
             RLDataFiles.save_player_info()
         elif self.current_command_index == 4:
