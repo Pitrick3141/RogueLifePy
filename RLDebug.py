@@ -15,7 +15,7 @@ class RLDebug:
             self.ui = QUiLoader().load(os.path.join('ui', 'FormDebug.ui'))
         except RuntimeError:
             # 缺少必要文件，启用恢复模式
-            RLRescue.rescueMode()
+            RLRescue.rescue_mode()
             self.ui = QUiLoader().load(os.path.join('ui', 'FormDebug.ui'))
         self.debug("调试输出模块初始化完成", type='success', who=self.__class__.__name__)
 

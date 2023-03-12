@@ -27,7 +27,7 @@ class RLMenu:
             self.ui = QUiLoader().load(os.path.join('ui', 'FormMenu.ui'))
         except RuntimeError:
             # 缺少必要文件，启用恢复模式
-            RLRescue.rescueMode()
+            RLRescue.rescue_mode()
             self.ui = QUiLoader().load(os.path.join('ui', 'FormMenu.ui'))
 
         # 设置窗口图标
@@ -43,14 +43,14 @@ class RLMenu:
         self.ui.buttonBox.addButton(button_close, QDialogButtonBox.AcceptRole)
 
         # 绑定按钮事件
-        self.ui.buttonOpenDataFilesDir.clicked.connect(self.openDir)
-        self.ui.buttonImportDataFile.clicked.connect(self.importDataFiles)
-        self.ui.buttonSyncDataFiles.clicked.connect(self.syncDataFiles)
-        self.ui.buttonCheckUpdate.clicked.connect(self.checkUpdate)
-        self.ui.buttonDebug.clicked.connect(self.showDebug)
-        self.ui.buttonConsole.clicked.connect(self.showConsole)
+        self.ui.buttonOpenDataFilesDir.clicked.connect(self.open_dir)
+        self.ui.buttonImportDataFile.clicked.connect(self.import_data_files)
+        self.ui.buttonSyncDataFiles.clicked.connect(self.sync_data_files)
+        self.ui.buttonCheckUpdate.clicked.connect(self.check_update)
+        self.ui.buttonDebug.clicked.connect(self.show_debug)
+        self.ui.buttonConsole.clicked.connect(self.show_console)
 
-    def checkUpdate(self):
+    def check_update(self):
 
         # 检查应用更新
         latest = True
@@ -132,7 +132,7 @@ class RLMenu:
 
         self.first_check = False
 
-    def syncDataFiles(self):
+    def sync_data_files(self):
         # 同步计数
         cnt_found = 0
         cnt_new = 0
@@ -209,13 +209,13 @@ class RLMenu:
                 if ret == QMessageBox.Yes:
                     # 覆盖下载
                     RLDebug.debug("已选择覆盖下载数据文件: {}".format(name), who=self.__class__.__name__)
-                    if self.downloadDataFiles(download_url, name):
+                    if self.download_data_files(download_url, name):
                         cnt_downloaded += 1
 
                 elif ret == QMessageBox.Ok:
                     # 重命名下载
                     RLDebug.debug("已选择重命名下载数据文件: {}".format(name), who=self.__class__.__name__)
-                    if self.downloadDataFiles(download_url, name + "_云端同步"):
+                    if self.download_data_files(download_url, name + "_云端同步"):
                         cnt_downloaded += 1
                 else:
                     # 不下载
@@ -239,7 +239,7 @@ class RLMenu:
 
             if ret == QMessageBox.Yes:
                 for (temp_name, temp_size, temp_url) in new_data_files:
-                    if self.downloadDataFiles(temp_url, temp_name):
+                    if self.download_data_files(temp_url, temp_name):
                         cnt_downloaded += 1
 
         # 刷新数据文件列表
@@ -270,7 +270,7 @@ class RLMenu:
         QMessageBox.information(self.ui, "数据文件同步完成", sync_report)
 
     @staticmethod
-    def downloadDataFiles(url, name) -> bool:
+    def download_data_files(url, name) -> bool:
         RLDebug.debug("开始从{}下载数据文件".format(url), who='RLMenu')
         try:
             r = requests.get(url=url)
@@ -287,7 +287,7 @@ class RLMenu:
 
         return True
 
-    def importDataFiles(self):
+    def import_data_files(self):
 
         # 打开选择文件对话框
         file_dialog = QFileDialog(self.ui)
@@ -373,7 +373,7 @@ class RLMenu:
             if data.get('type') == 'config':
                 RLDebug.debug("发现配置文件：{0}, 开始解析".format(display_name),
                               who='DataFiles')
-                global_var.configs.applyConfig(data)
+                global_var.configs.apply_config(data)
 
             # 检测是否是物品数据文件
             if data.get('type') == 'item':
@@ -390,17 +390,17 @@ class RLMenu:
         RLDebug.debug("已载入数据文件: " + data.get('name'), type='success', who=self.__class__.__name__)
 
     @staticmethod
-    def showDebug():
+    def show_debug():
         # 显示调试输出
         RLDebug.display()
 
     @staticmethod
-    def showConsole():
+    def show_console():
         # 显示控制台
         RLConsole.display()
 
     @staticmethod
-    def openDir():
+    def open_dir():
         # 打开数据文件目录
         RLDebug.debug("已打开数据文件目录", type='success', who='RLMenu')
         file_dir = os.path.join(os.getcwd(), 'data')
@@ -430,11 +430,11 @@ def set_debug_button_visible(is_visible):
     return
 
 
-def syncDataFiles():
-    rlMenu.syncDataFiles()
+def sync_data_files():
+    rlMenu.sync_data_files()
     return
 
 
-def checkUpdate():
-    rlMenu.checkUpdate()
+def check_update():
+    rlMenu.check_update()
     return

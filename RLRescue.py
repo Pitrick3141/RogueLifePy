@@ -6,7 +6,7 @@ import requests
 from PySide2.QtWidgets import QMessageBox, QMainWindow
 
 
-def rescueMode():
+def rescue_mode():
     # 缺少必要文件的恢复模式
     QMessageBox.critical(QMainWindow(), "致命错误",
                          "读取依赖文件失败，该文件可能不存在或已损坏，程序无法运行\n即将进入恢复模式")
@@ -18,6 +18,8 @@ def rescueMode():
         try:
             r = requests.get(url='https://api.github.com/repos/Pitrick3141/RogueLifePy/contents/ui',
                              params={'ref': 'master'})
+            dices = requests.get(url='https://api.github.com/repos/Pitrick3141/RogueLifePy/contents/ui/dices',
+                                 params={'ref': 'master'})
         except requests.exceptions.ConnectionError:
             QMessageBox.critical(QMainWindow(), "恢复模式", "网络连接异常，依赖文件列表获取失败")
             sys.exit(1)
@@ -26,8 +28,12 @@ def rescueMode():
         if not os.path.exists("ui"):
             os.mkdir("ui")
 
+        if not os.path.exists(os.path.join(os.getcwd(), 'ui', 'dices')):
+            os.mkdir(os.path.join(os.getcwd(), 'ui', 'dices'))
+
         # 依赖文件列表
         required_files = r.json()
+        resources_files = dices.json()
 
         # 已下载文件列表
         downloaded_files = []
@@ -49,6 +55,9 @@ def rescueMode():
             if os.path.exists(os.path.join('ui', name)):
                 continue
 
+            if download_url == 'null':
+                continue
+
             try:
                 download = requests.get(url=download_url)
             except requests.exceptions.ConnectionError:
@@ -63,6 +72,40 @@ def rescueMode():
                 "{} 已下载依赖文件: {}\n文件大小: {}Bytes ({}MB)\n文件哈希: {}\n".format(
                     str_time,
                     os.path.join('ui', name),
+                    file_size,
+                    file_size / 1000000,
+                    file_hash))
+
+        # 下载资源文件
+        for file in resources_files:
+
+            download_url = file['download_url']
+            name = file['name']
+            file_hash = file['sha']
+            file_size = file['size']
+            str_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
+            # 若文件存在则跳过下载
+            if os.path.exists(os.path.join('ui', 'dices', name)):
+                continue
+
+            if download_url == 'null':
+                continue
+
+            try:
+                download = requests.get(url=download_url)
+            except requests.exceptions.ConnectionError:
+                QMessageBox.critical(QMainWindow(), "恢复模式", "网络连接异常，依赖文件下载失败")
+                sys.exit(1)
+
+            # 写入依赖文件
+            with open(os.path.join('ui', 'dices', name), "wb") as f:
+                f.write(download.content)
+
+            downloaded_files.append(
+                "{} 已下载依赖文件: {}\n文件大小: {}Bytes ({}MB)\n文件哈希: {}\n".format(
+                    str_time,
+                    os.path.join('ui', 'dices', name),
                     file_size,
                     file_size / 1000000,
                     file_hash))

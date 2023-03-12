@@ -23,31 +23,31 @@ class RLMain:
             self.ui = QUiLoader().load(os.path.join('ui', 'FormMain.ui'))
         except RuntimeError:
             # 缺少必要文件，启用恢复模式
-            RLRescue.rescueMode()
+            RLRescue.rescue_mode()
             self.ui = QUiLoader().load(os.path.join('ui', 'FormMain.ui'))
 
         # 设置窗口图标
         self.ui.setWindowIcon(global_var.app_icon())
 
         # 彩蛋按钮
-        self.refreshEgg()
+        self.refresh_egg()
 
         # 绑定按钮事件
-        self.ui.buttonQuit.clicked.connect(quitProgram)
-        self.ui.buttonEggs.clicked.connect(self.showEggs)
-        self.ui.buttonMenu.clicked.connect(openMenu)
-        self.ui.buttonStart.clicked.connect(openGame)
+        self.ui.buttonQuit.clicked.connect(quit_program)
+        self.ui.buttonEggs.clicked.connect(self.show_eggs)
+        self.ui.buttonMenu.clicked.connect(open_menu)
+        self.ui.buttonStart.clicked.connect(open_game)
 
         RLDebug.debug("主界面初始化完成", type='success', who=self.__class__.__name__)
 
-    def showEggs(self):
+    def show_eggs(self):
         discovered_eggs = global_var.configs.get_config('discovered_eggs')
         eggs_list = ""
         for key in discovered_eggs.keys():
             eggs_list += "【{}】 发现时间: {}\n".format(key, discovered_eggs[key])
         QMessageBox.information(self.ui, "恭喜你已经找到了{}个彩蛋".format(len(discovered_eggs)), eggs_list)
 
-    def findEgg(self, title):
+    def find_egg(self, title):
         if 'discovered_eggs' not in global_var.configs.config_keys():
             global_var.configs.set_config('discovered_eggs', {})
         discovered_eggs = global_var.configs.get_config('discovered_eggs')
@@ -65,9 +65,9 @@ class RLMain:
                       who=self.__class__.__name__)
 
         # 刷新彩蛋按钮
-        self.refreshEgg()
+        self.refresh_egg()
 
-    def refreshEgg(self):
+    def refresh_egg(self):
         discovered_eggs = global_var.configs.get_config('discovered_eggs')
         if not discovered_eggs:
             self.ui.buttonEggs.setVisible(False)
@@ -90,7 +90,7 @@ def display() -> None:
     rlMain.ui.show()
 
 
-def openMenu():
+def open_menu():
     # 打开菜单
     if global_var.configs.get_config('enable_debug') is True:
         RLUtility.set_debug_button_visible(True)
@@ -99,12 +99,12 @@ def openMenu():
     RLUtility.display()
 
 
-def openGame():
+def open_game():
     # 打开游戏
     RLGame.display()
 
 
-def quitProgram():
+def quit_program():
     # 弹窗确认是否退出程序
     msgbox = QMessageBox()
     msgbox.setWindowTitle("确认退出")

@@ -11,7 +11,7 @@ class Configs:
     def __init__(self):
         RLDebug.debug("配置项模块初始化完成", type='success', who=self.__class__.__name__)
 
-    def applyConfig(self, config_file):
+    def apply_config(self, config_file):
         # 应用配置文件
 
         # 检测配置文件是否启用

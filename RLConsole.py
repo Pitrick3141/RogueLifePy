@@ -19,20 +19,20 @@ class RLConsole:
             self.ui = QUiLoader().load(os.path.join('ui', 'FormConsole.ui'))
         except RuntimeError:
             # 缺少必要文件，启用恢复模式
-            RLRescue.rescueMode()
+            RLRescue.rescue_mode()
             self.ui = QUiLoader().load(os.path.join('ui', 'FormConsole.ui'))
 
         # 绑定命令选择框事件
-        self.ui.listCommand.itemClicked.connect(self.commandChange)
+        self.ui.listCommand.itemClicked.connect(self.command_change)
 
         # 绑定按钮事件
-        self.ui.buttonRun.clicked.connect(self.runCommand)
-        self.ui.buttonDebug.clicked.connect(self.showDebug)
+        self.ui.buttonRun.clicked.connect(self.run_command)
+        self.ui.buttonDebug.clicked.connect(self.show_debug)
 
         # 绑定输入框事件
-        self.ui.lineEditCoef1.textEdited.connect(self.coefficient1Edit)
-        self.ui.lineEditCoef2.textEdited.connect(self.coefficient2Edit)
-        self.ui.lineEditCoef3.textEdited.connect(self.coefficient3Edit)
+        self.ui.lineEditCoef1.textEdited.connect(self.coefficient1_edit)
+        self.ui.lineEditCoef2.textEdited.connect(self.coefficient2_edit)
+        self.ui.lineEditCoef3.textEdited.connect(self.coefficient3_edit)
 
         # 设定参数
         self.set_coefficient((None, None, None))
@@ -73,7 +73,7 @@ class RLConsole:
             self.ui.listCommand.addItem(command)
         RLDebug.debug("控制台初始化完成", type='success', who=self.__class__.__name__)
 
-    def commandChange(self):
+    def command_change(self):
         self.ui.lineEditCoef1.clear()
         self.ui.lineEditCoef2.clear()
         self.ui.lineEditCoef3.clear()
@@ -104,7 +104,7 @@ class RLConsole:
             self.ui.labelCoef3.setVisible(True)
             self.ui.labelCoef3.setText(coefficient_3)
 
-    def runCommand(self):
+    def run_command(self):
         if self.current_command_index == -1:
             RLDebug.debug("请先选择要执行的命令", type='error', who=self.__class__.__name__)
             return
@@ -147,17 +147,17 @@ class RLConsole:
                                   global_var.items_list[rand_index].name,
                                   global_var.items_list[rand_index].rare), who=self.__class__.__name__)
 
-    def coefficient1Edit(self):
+    def coefficient1_edit(self):
         self.coefficient_1 = self.ui.lineEditCoef1.text()
 
-    def coefficient2Edit(self):
+    def coefficient2_edit(self):
         self.coefficient_2 = self.ui.lineEditCoef2.text()
 
-    def coefficient3Edit(self):
+    def coefficient3_edit(self):
         self.coefficient_3 = self.ui.lineEditCoef3.text()
 
     @staticmethod
-    def showDebug():
+    def show_debug():
         # 显示调试输出
         RLDebug.display()
 

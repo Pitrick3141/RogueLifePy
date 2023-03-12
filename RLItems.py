@@ -13,7 +13,7 @@ class Item(Collections):
         # 修正
         self.adjustments = {}
 
-    def addAdjustment(self, adjustment: str, value: int):
+    def add_adjustment(self, adjustment: str, value: int):
         # 向藏品添加修正
         if adjustment not in self.adjustments.keys():
             self.adjustments[adjustment] = value
@@ -60,7 +60,7 @@ def load_items(item_file):
         if item.get("adjustments"):
             adjustments = item.get("adjustments")
             for adjustment in adjustments:
-                new_item.addAdjustment(adjustment, adjustments[adjustment])
+                new_item.add_adjustment(adjustment, adjustments[adjustment])
         if item.get("exclude"):
             new_item.exclude = item.get("exclude")
         if item.get("require"):

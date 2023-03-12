@@ -1,5 +1,5 @@
 {
-    "name": "events_2023_03_12_15_53_26", 
+    "name": "events_2023_03_12_16_23_33", 
     "type": "events", 
     "enabled": true, 
     "version": "*", 
@@ -188,6 +188,30 @@
             "actions": [
                 40009
             ], 
+            "items": []
+        }, 
+        {
+            "index": 20011, 
+            "name": "第二幕", 
+            "des": "还没做好", 
+            "rare": 0, 
+            "exclusive": true, 
+            "exclude": [], 
+            "require": [], 
+            "challenges": [], 
+            "actions": [], 
+            "items": []
+        }, 
+        {
+            "index": 20022, 
+            "name": "队伍解散", 
+            "des": "GGWP", 
+            "rare": 0, 
+            "exclusive": true, 
+            "exclude": [], 
+            "require": [], 
+            "challenges": [], 
+            "actions": [], 
             "items": []
         }
     ]

@@ -22,7 +22,7 @@ class RLGame:
             self.ui = QUiLoader().load(os.path.join('ui', 'FormGame.ui'))
         except RuntimeError:
             # 缺少必要文件，启用恢复模式
-            RLRescue.rescueMode()
+            RLRescue.rescue_mode()
             self.ui = QUiLoader().load(os.path.join('ui', 'FormGame.ui'))
 
         # 设置窗口图标
@@ -146,7 +146,6 @@ class RLGame:
         self.ui.checkExtra.setEnabled(False)
         self.ui.labelRequired.setVisible(False)
         self.ui.labelPossessed.setVisible(False)
-        self.round_progress_reset()
 
     def roll_dice(self, **kwargs):
         self.check_clear()
@@ -517,6 +516,7 @@ class RLGame:
             self.current_stage = 0
         else:
             self.check_clear()
+            self.round_progress_reset()
             self.ui.buttonContinue.setEnabled(True)
             self.ui.buttonContinue.setText("继续")
             self.ui.labelCheck.setText("当前无需检定")

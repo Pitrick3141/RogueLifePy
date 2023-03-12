@@ -25,7 +25,7 @@ def load_data_files():
     if not os.path.exists("data"):
         QMessageBox.critical(QMainWindow(), "错误",
                              "数据文件目录不存在或已损坏\n正在建立新的数据文件目录并从云端同步数据文件")
-        RLUtility.syncDataFiles()
+        RLUtility.sync_data_files()
         return
 
     # 默认数据文件目录
@@ -103,7 +103,7 @@ def load_data_files():
                     if data.get('type') == 'config':
                         RLDebug.debug("发现配置文件：{0}, 开始解析".format(display_name),
                                       who='DataFiles')
-                        global_var.configs.applyConfig(data)
+                        global_var.configs.apply_config(data)
 
                     # 检测是否是物品数据文件
                     if data.get('type') == 'items':
