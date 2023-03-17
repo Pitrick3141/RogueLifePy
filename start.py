@@ -16,7 +16,6 @@ import RLMain
 
 import RLConsole
 
-
 # 新建 Pyside2 Application
 app = QApplication([])
 
@@ -50,7 +49,7 @@ RLConsole.init()
 # 显示主窗口&检查更新
 
 RLMain.display()
-# RLUtility.checkUpdate()
+RLUtility.check_update()
 
 # 开始事件循环
 # noinspection PyUnboundLocalVariable

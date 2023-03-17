@@ -17,6 +17,15 @@ class RLDebug:
             # 缺少必要文件，启用恢复模式
             RLRescue.rescue_mode()
             self.ui = QUiLoader().load(os.path.join('ui', 'FormDebug.ui'))
+
+        self.enable_file_output = False
+        self.output_file = None
+
+        if os.path.isfile("debug_output.log"):
+            self.enable_file_output = True
+            self.output_file = open(r"debug_output.log", 'a+')
+            self.debug("调试信息文件输出已启用", type='info', who=self.__class__.__name__)
+
         self.debug("调试输出模块初始化完成", type='success', who=self.__class__.__name__)
 
     def debug(self, text: str, **kwargs) -> None:
@@ -85,7 +94,11 @@ class RLDebug:
         self.ui.textDebug.append(prefix + current_time + output_message + suffix)
         # 移动到文本框底部
         self.ui.textDebug.moveCursor(self.ui.textDebug.textCursor().End)
+        # 控制台输出
         print(current_time + output_message)
+        # 文件输出
+        if self.enable_file_output:
+            self.output_file.write(current_time + output_message + '\n')
 
 
 def init():

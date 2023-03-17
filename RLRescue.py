@@ -69,7 +69,7 @@ def rescue_mode():
                 f.write(download.content)
 
             downloaded_files.append(
-                "{} 已下载依赖文件: {}\n文件大小: {}Bytes ({}MB)\n文件哈希: {}\n".format(
+                "{} 已下载依赖文件: {} | 文件大小: {}Bytes ({}MB) | 文件hash: {}\n".format(
                     str_time,
                     os.path.join('ui', name),
                     file_size,

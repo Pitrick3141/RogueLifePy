@@ -39,7 +39,7 @@ global data_files_hash
 
 def init():
     global current_version
-    current_version = 'v1.0.0'
+    current_version = 'v1.0.1'
 
     # 读取程序图标
     global _app_icon

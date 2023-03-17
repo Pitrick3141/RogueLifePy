@@ -40,6 +40,12 @@ class RLMain:
 
         RLDebug.debug("主界面初始化完成", type='success', who=self.__class__.__name__)
 
+        # 清理更新脚本
+        if os.path.isfile("update.bat"):
+            RLDebug.debug("发现更新脚本，已清理完成", type='success', who=self.__class__.__name__)
+            os.remove("update.bat")
+            QMessageBox.information(self.ui, "更新完成", "已成功更新至{}".format(global_var.current_version))
+
     def show_eggs(self):
         discovered_eggs = global_var.configs.get_config('discovered_eggs')
         eggs_list = ""

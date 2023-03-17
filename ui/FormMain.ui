@@ -87,7 +87,7 @@
      <rect>
       <x>30</x>
       <y>20</y>
-      <width>251</width>
+      <width>351</width>
       <height>61</height>
      </rect>
     </property>
@@ -100,37 +100,7 @@
      </font>
     </property>
     <property name="text">
-     <string>MyRogueLife</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelTitle_2">
-    <property name="geometry">
-     <rect>
-      <x>280</x>
-      <y>20</y>
-      <width>61</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Comic Sans MS</family>
-      <pointsize>24</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color:rgb(0, 170, 255)</string>
-    </property>
-    <property name="text">
-     <string>2</string>
-    </property>
-    <property name="wordWrap">
-     <bool>false</bool>
+     <string>MyRogueLife2</string>
     </property>
    </widget>
    <widget class="QPushButton" name="buttonEggs">

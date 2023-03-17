@@ -1,7 +1,10 @@
 import os
 import json
+import sys
+
 import requests
 import webbrowser
+import subprocess
 
 from PySide2.QtWidgets import QMessageBox, QPushButton, QDialogButtonBox
 from PySide2.QtUiTools import QUiLoader
@@ -76,8 +79,48 @@ class RLUpdate:
         RLDebug.debug("已打开最新版本发布页面", type='success', who=self.__class__.__name__)
         webbrowser.open(self.json_data['html_url'])
 
-    def download_update(self):
+    def install_update(self):
 
+        RLDebug.debug("更新文件{}已经就绪，准备进行更新".format(os.path.join(os.getcwd(), self.json_data['assets'][0]['name'])),
+                      type='success',
+                      who=self.__class__.__name__)
+        msgbox = QMessageBox()
+        msgbox.setWindowTitle("确认进行更新")
+        msgbox.setText("你确定要自动安装更新吗？")
+        msgbox.setInformativeText("当前版本的内容将被覆盖")
+        msgbox.setIcon(QMessageBox.Question)
+        msgbox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        msgbox.setDefaultButton(QMessageBox.Yes)
+        msgbox.setButtonText(QMessageBox.Yes, "确定")
+        msgbox.setButtonText(QMessageBox.No, "手动安装更新")
+        ret = msgbox.exec_()
+        if ret == QMessageBox.Yes:
+            RLDebug.debug("用户已经确认，开始生成更新脚本" + os.path.join(os.getcwd(), "update.bat"),
+                          type='info',
+                          who=self.__class__.__name__)
+            bat = open("update.bat", 'w')
+            update_script = "@echo off \n"
+            update_script += "if not exist RogueLifePy.zip exit \n"
+            update_script += "timeout 3 \n"
+            update_script += "tar -xf RogueLifePy.zip \n"
+            update_script += "del RogueLifePy.zip \n"
+            update_script += "start RogueLifePy.exe"
+            bat.write(update_script)
+            bat.close()
+            RLDebug.debug("成功生成更新脚本" + os.path.join(os.getcwd(), "update.bat"),
+                          type='success',
+                          who=self.__class__.__name__)
+            QMessageBox.warning(self.ui, "游戏需要重启", "游戏即将重启以更新到最新版本")
+            RLDebug.debug("退出主程序并开始运行更新脚本" + os.path.join(os.getcwd(), "update.bat"),
+                          type='info',
+                          who=self.__class__.__name__)
+            subprocess.Popen("update.bat")
+            sys.exit()
+        else:
+            QMessageBox.information(self.ui, "更新文件下载完成", "更新文件已保存至{}\n请手动解压并覆盖当前版本"
+                                    .format(os.path.join(os.getcwd(), self.json_data['assets'][0]['name'])))
+
+    def download_update(self):
         # 下载最新版本更新文件
 
         # 检测是否已经存在更新文件
@@ -85,6 +128,7 @@ class RLUpdate:
             RLDebug.debug("发现已下载的更新文件{},跳过本次下载".format(self.json_data['assets'][0]['name']),
                           type='warn',
                           who=self.__class__.__name__)
+            self.install_update()
             return
 
         # 下载更新文件
@@ -96,23 +140,20 @@ class RLUpdate:
             RLDebug.debug("网络连接异常，下载更新文件失败", type='error', who=self.__class__.__name__)
             return
 
-        RLDebug.debug("已下载更新文件".format(self.json_data['assets'][0]['name']),
+        RLDebug.debug("已下载更新文件" + self.json_data['assets'][0]['name'],
                       type='success',
                       who=self.__class__.__name__)
-        RLDebug.debug("正在保存更新文件到{}\\{}".format(os.getcwd(), self.json_data['assets'][0]['name']),
+        RLDebug.debug("正在保存更新文件到" + os.path.join(os.getcwd(), self.json_data['assets'][0]['name']),
                       who=self.__class__.__name__)
 
         # 保存更新文件到运行目录
         with open(self.json_data['assets'][0]['name'], 'wb') as f:
             f.write(update_file.content)
             f.close()
-        RLDebug.debug("更新文件已保存至{}\\{}".format(os.getcwd(), self.json_data['assets'][0]['name']),
+        RLDebug.debug("更新文件已保存至" + os.path.join(os.getcwd(), self.json_data['assets'][0]['name']),
                       type='success',
                       who=self.__class__.__name__)
-        QMessageBox.information(self.ui, "更新文件下载完成", "更新文件已保存至{}\\{}\n{}"
-                                .format(os.getcwd(),
-                                        self.json_data['assets'][0]['name'],
-                                        "请手动解压并覆盖当前版本"))
+        self.install_update()
 
     def ignore_update(self):
 
@@ -135,15 +176,17 @@ class RLUpdate:
                 for ver in global_var.configs.get_config('ignored_version'):
                     ignored_version.append(ver)
             RLDebug.debug("当前跳过的版本: {}".format(ignored_version))
-            json_dump = {'config': True,
+            json_dump = {'name': 'ignore_update',
+                         'type': 'config',
                          'version': global_var.current_version,
+                         'enabled': True, 
                          'ignored_version': [self.json_data['tag_name']]}
 
             # 保存配置文件
-            with open("configs\\ignored_version.json", "w") as f:
+            with open(os.path.join(os.getcwd(), 'data', 'ignored_version.json'), "w+") as f:
                 json.dump(json_dump, f)
 
-            RLDebug.debug("配置文件已保存至{}\\{}".format(os.getcwd(), "configs\\ignored_version.json"))
+            RLDebug.debug("配置文件已保存至" + os.path.join(os.getcwd(), 'data', 'ignored_version.json'))
 
 
 def init():
@@ -157,4 +200,4 @@ def display():
 
 
 def set_data(data):
-    rlUpdate.setData(data)
+    rlUpdate.set_data(data)

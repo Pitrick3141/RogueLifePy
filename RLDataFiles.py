@@ -62,12 +62,12 @@ def load_data_files():
                     # 解码失败异常：一般是内容为空或者不合法
                     except json.decoder.JSONDecodeError:
                         RLDebug.debug(
-                            "已损坏的数据文件：{0}, 数据文件内容为空或不合法, 跳过当前数据文件".format(display_name),
+                            "已损坏的数据文件：{}, 数据文件内容为空或不合法, 跳过当前数据文件".format(display_name),
                             type='error', who='DataFiles')
                         continue
                     except UnicodeDecodeError:
                         RLDebug.debug(
-                            "已损坏的数据文件：{0}, 数据文件编码格式有误, 跳过当前数据文件".format(display_name),
+                            "已损坏的数据文件：{}, 数据文件编码格式有误, 跳过当前数据文件".format(display_name),
                             type='error', who='DataFiles')
                         continue
 
@@ -82,7 +82,7 @@ def load_data_files():
 
                     # 如果有缺失的关键键值对
                     if not len(missed_keys) == 0:
-                        RLDebug.debug("已损坏的数据文件：{0}, 缺失如下键值对:{1}, 跳过当前数据文件".format(
+                        RLDebug.debug("已损坏的数据文件：{}, 缺失如下键值对:{}, 跳过当前数据文件".format(
                             display_name,
                             missed_keys),
                             type='error', who='DataFiles')
@@ -90,7 +90,7 @@ def load_data_files():
 
                     # 检测是否已经添加了相同的数据文件
                     elif hash_value in global_var.data_files_hash:
-                        RLDebug.debug("已经载入相同的数据文件: {0}, 跳过当前数据文件".format(
+                        RLDebug.debug("已经载入相同的数据文件: {}, 跳过当前数据文件".format(
                             global_var.data_files_hash.get(hash_value)),
                             type='warn', who='DataFiles')
                         continue
@@ -101,37 +101,37 @@ def load_data_files():
 
                     # 检测是否是配置文件
                     if data.get('type') == 'config':
-                        RLDebug.debug("发现配置文件：{0}, 开始解析".format(display_name),
+                        RLDebug.debug("发现配置文件：{}, 开始解析".format(display_name),
                                       who='DataFiles')
                         global_var.configs.apply_config(data)
 
                     # 检测是否是物品数据文件
                     if data.get('type') == 'items':
-                        RLDebug.debug("发现物品数据文件：{0}, 开始解析".format(display_name),
+                        RLDebug.debug("发现物品数据文件：{}, 开始解析".format(display_name),
                                       who='DataFiles')
                         RLItems.load_items(data)
 
                     # 检测是否是事件数据文件
                     if data.get('type') == 'events':
-                        RLDebug.debug("发现物品数据文件：{0}, 开始解析".format(display_name),
+                        RLDebug.debug("发现物品数据文件：{}, 开始解析".format(display_name),
                                       who='DataFiles')
                         RLEvents.load_events(data)
 
                     # 检测是否是挑战数据文件
                     if data.get('type') == 'challenges':
-                        RLDebug.debug("发现挑战数据文件：{0}, 开始解析".format(display_name),
+                        RLDebug.debug("发现挑战数据文件：{}, 开始解析".format(display_name),
                                       who='DataFiles')
                         RLChallenges.load_challenges(data)
 
                     # 检测是否是行动数据文件
                     if data.get('type') == 'actions':
-                        RLDebug.debug("发现行动数据文件：{0}, 开始解析".format(display_name),
+                        RLDebug.debug("发现行动数据文件：{}, 开始解析".format(display_name),
                                       who='DataFiles')
                         RLActions.load_actions(data)
 
                     # 检测是否是玩家信息存档文件
                     if data.get('type') == 'player':
-                        RLDebug.debug("发现玩家信息存档文件：{0}, 开始解析".format(display_name),
+                        RLDebug.debug("发现玩家信息存档文件：{}, 开始解析".format(display_name),
                                       who='DataFiles')
                         RLPlayer.load_player_info(data)
 
@@ -139,10 +139,10 @@ def load_data_files():
 
             # 文件拓展名不为.json
             else:
-                RLDebug.debug("不支持的文件类型(目前仅支持.json格式)：{0}, 跳过当前数据文件".format(display_name),
+                RLDebug.debug("不支持的文件类型(目前仅支持.json格式)：{}, 跳过当前数据文件".format(display_name),
                               type='error', who='DataFiles')
 
-    RLDebug.debug("数据文件载入完成,共载入{0}个数据文件".format(len(global_var.data_files)),
+    RLDebug.debug("数据文件载入完成,共载入{}个数据文件".format(len(global_var.data_files)),
                   type='success', who='DataFiles')
 
 
