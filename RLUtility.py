@@ -5,42 +5,33 @@ import platform
 import subprocess
 
 import requests
-from PySide2.QtUiTools import QUiLoader
-from PySide2.QtWidgets import QPushButton, QDialogButtonBox, QMessageBox, QFileDialog
+from PySide6.QtWidgets import QMessageBox, QFileDialog, QMainWindow
 
 import RLConsole
 import RLDataFiles
 import RLItems
 import RLPlayer
-import RLRescue
 import global_var
 import RLDebug
 import RLUpdate
 
+from ui_form_utility import Ui_FormUtility
+
 global rlMenu
 
 
-class RLMenu:
+class RLMenu(QMainWindow):
     def __init__(self):
         # 加载菜单UI
-        try:
-            self.ui = QUiLoader().load(os.path.join('ui', 'FormMenu.ui'))
-        except RuntimeError:
-            # 缺少必要文件，启用恢复模式
-            RLRescue.rescue_mode()
-            self.ui = QUiLoader().load(os.path.join('ui', 'FormMenu.ui'))
+        super(RLMenu, self).__init__()
+        self.ui = Ui_FormUtility()
+        self.ui.setupUi(self)
 
         # 设置窗口图标
-        self.ui.setWindowIcon(global_var.app_icon())
+        self.setWindowIcon(global_var.app_icon())
 
         # 是否是启动第一次检查更新
         self.first_check = True
-
-        # 弹窗按钮
-        button_close = QPushButton('关闭菜单')
-
-        # 将按钮添加到弹窗
-        self.ui.buttonBox.addButton(button_close, QDialogButtonBox.AcceptRole)
 
         # 绑定按钮事件
         self.ui.buttonOpenDataFilesDir.clicked.connect(self.open_dir)
@@ -128,7 +119,7 @@ class RLMenu:
         else:
             RLDebug.debug("当前已经是最新版本", type='success', who=self.__class__.__name__)
             if not self.first_check:
-                QMessageBox.information(self.ui, "检查更新完成", "当前已经是最新版本: " + global_var.current_version)
+                QMessageBox.information(self, "检查更新完成", "当前已经是最新版本: " + global_var.current_version)
 
         self.first_check = False
 
@@ -198,21 +189,23 @@ class RLMenu:
                 msgbox.setWindowTitle("下载数据文件确认")
                 msgbox.setText("云端数据文件与本地数据文件同名但内容不同\n是否覆盖下载？")
                 msgbox.setInformativeText("当前本地同名数据文件:{}".format(os.path.join(os.getcwd(), 'data', name + '.json')))
-                msgbox.setIcon(QMessageBox.Warning)
-                msgbox.setStandardButtons(QMessageBox.Yes | QMessageBox.Ok | QMessageBox.No)
-                msgbox.setDefaultButton(QMessageBox.Yes)
-                msgbox.setButtonText(QMessageBox.Yes, "覆盖下载")
-                msgbox.setButtonText(QMessageBox.Ok, "重命名下载")
-                msgbox.setButtonText(QMessageBox.No, "不下载")
+                msgbox.setIcon(QMessageBox.Icon.Warning)
+                msgbox.setStandardButtons(QMessageBox.StandardButton.Yes |
+                                          QMessageBox.StandardButton.Ok |
+                                          QMessageBox.StandardButton.No)
+                msgbox.setDefaultButton(QMessageBox.StandardButton.Yes)
+                msgbox.setButtonText(QMessageBox.StandardButton.Yes, "覆盖下载")
+                msgbox.setButtonText(QMessageBox.StandardButton.Ok, "重命名下载")
+                msgbox.setButtonText(QMessageBox.StandardButton.No, "不下载")
                 ret = msgbox.exec_()
 
-                if ret == QMessageBox.Yes:
+                if ret == QMessageBox.StandardButton.Yes:
                     # 覆盖下载
                     RLDebug.debug("已选择覆盖下载数据文件: {}".format(name), who=self.__class__.__name__)
                     if self.download_data_files(download_url, name):
                         cnt_downloaded += 1
 
-                elif ret == QMessageBox.Ok:
+                elif ret == QMessageBox.StandardButton.Ok:
                     # 重命名下载
                     RLDebug.debug("已选择重命名下载数据文件: {}".format(name), who=self.__class__.__name__)
                     if self.download_data_files(download_url, name + "_云端同步"):
@@ -235,9 +228,9 @@ class RLMenu:
                     temp_name,
                     temp_size,
                     temp_size / 1000000)
-            ret = QMessageBox.question(self.ui, "下载数据确认", str_new_data_files)
+            ret = QMessageBox.question(self, "下载数据确认", str_new_data_files)
 
-            if ret == QMessageBox.Yes:
+            if ret == QMessageBox.StandardButton.Yes:
                 for (temp_name, temp_size, temp_url) in new_data_files:
                     if self.download_data_files(temp_url, temp_name):
                         cnt_downloaded += 1
@@ -267,7 +260,7 @@ class RLMenu:
                       type='success',
                       who=self.__class__.__name__)
 
-        QMessageBox.information(self.ui, "数据文件同步完成", sync_report)
+        QMessageBox.information(self, "数据文件同步完成", sync_report)
 
     @staticmethod
     def download_data_files(url, name) -> bool:
@@ -290,8 +283,8 @@ class RLMenu:
     def import_data_files(self):
 
         # 打开选择文件对话框
-        file_dialog = QFileDialog(self.ui)
-        file_dir = file_dialog.getOpenFileName(self.ui, "导入数据文件", os.getcwd(), "数据文件 (*.json)")
+        file_dialog = QFileDialog(self)
+        file_dir = file_dialog.getOpenFileName(self, "导入数据文件", os.getcwd(), "数据文件 (*.json)")
 
         # 若未选择任何文件就关闭对话框
         if file_dir[0] == "":
@@ -416,7 +409,7 @@ def init():
 
 
 def display():
-    rlMenu.ui.show()
+    rlMenu.show()
     RLDebug.debug("已打开功能菜单界面", type='success', who='RLMenu')
 
 

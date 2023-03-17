@@ -157,14 +157,18 @@ def check(conditions: list) -> bool:
         for i in range(1, len(conditions), 2):
             if conditions[i] == '&':
                 if result is True:
-                    result = check(conditions[i + 1]) if type(conditions[i + 1]) == list else check_logic(conditions[i + 1])
+                    result = check(conditions[i + 1]) \
+                        if type(conditions[i + 1]) == list \
+                        else check_logic(conditions[i + 1])
                 else:
                     return False
             elif conditions[i] == '|':
                 if result is True:
                     return True
                 else:
-                    result = check(conditions[i + 1]) if type(conditions[i + 1]) == list else check_logic(conditions[i + 1])
+                    result = check(conditions[i + 1]) \
+                        if type(conditions[i + 1]) == list \
+                        else check_logic(conditions[i + 1])
             else:
                 return False
     return result

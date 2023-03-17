@@ -1,26 +1,23 @@
-from PySide2.QtUiTools import QUiLoader
-import os
+from PySide6.QtWidgets import QMainWindow
 
 import RLConditions
 import RLDataFiles
 import RLGame
-import RLRescue
 import RLDebug
 import global_var
+
+from ui_form_console import Ui_FormConsole
 
 global rlConsole
 
 
-class RLConsole:
+class RLConsole(QMainWindow):
 
     def __init__(self):
         # 加载控制台UI
-        try:
-            self.ui = QUiLoader().load(os.path.join('ui', 'FormConsole.ui'))
-        except RuntimeError:
-            # 缺少必要文件，启用恢复模式
-            RLRescue.rescue_mode()
-            self.ui = QUiLoader().load(os.path.join('ui', 'FormConsole.ui'))
+        super(RLConsole, self).__init__()
+        self.ui = Ui_FormConsole()
+        self.ui.setupUi(self)
 
         # 绑定命令选择框事件
         self.ui.listCommand.itemClicked.connect(self.command_change)
@@ -133,7 +130,9 @@ class RLConsole:
         elif self.current_command_index == 8:
             RLGame.rlGame.set_check_rate(int(self.coefficient_1), int(self.coefficient_2))
         elif self.current_command_index == 9:
-            RLGame.rlGame.roll_dice(manipulate=[int(self.coefficient_1), int(self.coefficient_2), int(self.coefficient_3)])
+            RLGame.rlGame.roll_dice(manipulate=[int(self.coefficient_1),
+                                                int(self.coefficient_2),
+                                                int(self.coefficient_3)])
         elif self.current_command_index == 10:
             rand_index = global_var.random_events.get_random_index()
             RLDebug.debug("随机到了序号为{}的事件{}【抽取概率{}】"
@@ -169,4 +168,4 @@ def init():
 
 def display() -> None:
     RLDebug.debug("已打开控制台", type='success', who='RLConsole')
-    rlConsole.ui.show()
+    rlConsole.show()

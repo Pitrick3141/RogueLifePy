@@ -3,7 +3,7 @@ import json
 import os
 import time
 
-from PySide2.QtWidgets import QMessageBox, QMainWindow
+from PySide6.QtWidgets import QMessageBox, QMainWindow
 
 import RLActions
 import RLChallenges
@@ -159,17 +159,19 @@ def save_player_info():
         msgbox.setWindowTitle("存档已存在")
         msgbox.setText("你确定要覆盖当前存档吗？")
         msgbox.setInformativeText("当前同名模板:{}".format(os.path.join(os.getcwd(), 'data', 'save', 'save.json')))
-        msgbox.setIcon(QMessageBox.Warning)
-        msgbox.setStandardButtons(QMessageBox.Yes | QMessageBox.Ok | QMessageBox.No)
-        msgbox.setDefaultButton(QMessageBox.Yes)
-        msgbox.setButtonText(QMessageBox.Yes, "覆盖保存")
-        msgbox.setButtonText(QMessageBox.Ok, "重命名保存")
-        msgbox.setButtonText(QMessageBox.No, "取消保存")
+        msgbox.setIcon(QMessageBox.Icon.Warning)
+        msgbox.setStandardButtons(QMessageBox.StandardButton.Yes |
+                                  QMessageBox.StandardButton.Ok |
+                                  QMessageBox.StandardButton.No)
+        msgbox.setDefaultButton(QMessageBox.StandardButton.Yes)
+        msgbox.setButtonText(QMessageBox.StandardButton.Yes, "覆盖保存")
+        msgbox.setButtonText(QMessageBox.StandardButton.Ok, "重命名保存")
+        msgbox.setButtonText(QMessageBox.StandardButton.No, "取消保存")
         ret = msgbox.exec_()
-        if ret == QMessageBox.Ok:
+        if ret == QMessageBox.StandardButton.Ok:
             save_name = os.path.join('data', 'save', 'save_{}.json'.format(time.strftime(
                 "%Y_%m_%d_%H_%M_%S", time.localtime())))
-        elif ret == QMessageBox.Yes:
+        elif ret == QMessageBox.StandardButton.Yes:
             save_name = os.path.join('data', 'save', 'save.json')
         else:
             return
@@ -191,7 +193,7 @@ def save_player_info():
     QMessageBox.information(QMainWindow(),
                             "保存成功",
                             "玩家信息已保存至{}".format(os.path.join(os.getcwd(), save_name)),
-                            QMessageBox.Ok)
+                            QMessageBox.StandardButton.Ok)
     RLDebug.debug("玩家信息已保存至{}".format(os.path.join(os.getcwd(), save_name)),
                   type='success', who='DataFiles')
 

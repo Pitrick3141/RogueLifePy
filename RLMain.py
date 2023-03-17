@@ -3,31 +3,28 @@ import os
 import sys
 import time
 
-from PySide2.QtWidgets import QMessageBox
-from PySide2.QtUiTools import QUiLoader
+from PySide6.QtWidgets import QMainWindow, QMessageBox
 
 import RLGame
-import RLRescue
 import RLDebug
 import RLUtility
 import global_var
 
+from ui_form_main import Ui_FormMain
+
 global rlMain
 
 
-class RLMain:
+class RLMain(QMainWindow):
 
     def __init__(self):
         # 加载主窗口UI
-        try:
-            self.ui = QUiLoader().load(os.path.join('ui', 'FormMain.ui'))
-        except RuntimeError:
-            # 缺少必要文件，启用恢复模式
-            RLRescue.rescue_mode()
-            self.ui = QUiLoader().load(os.path.join('ui', 'FormMain.ui'))
+        super(RLMain, self).__init__()
+        self.ui = Ui_FormMain()
+        self.ui.setupUi(self)
 
         # 设置窗口图标
-        self.ui.setWindowIcon(global_var.app_icon())
+        self.setWindowIcon(global_var.app_icon())
 
         # 彩蛋按钮
         self.refresh_egg()
@@ -44,14 +41,14 @@ class RLMain:
         if os.path.isfile("update.bat"):
             RLDebug.debug("发现更新脚本，已清理完成", type='success', who=self.__class__.__name__)
             os.remove("update.bat")
-            QMessageBox.information(self.ui, "更新完成", "已成功更新至{}".format(global_var.current_version))
+            QMessageBox.information(self, "更新完成", "已成功更新至{}".format(global_var.current_version))
 
     def show_eggs(self):
         discovered_eggs = global_var.configs.get_config('discovered_eggs')
         eggs_list = ""
         for key in discovered_eggs.keys():
             eggs_list += "【{}】 发现时间: {}\n".format(key, discovered_eggs[key])
-        QMessageBox.information(self.ui, "恭喜你已经找到了{}个彩蛋".format(len(discovered_eggs)), eggs_list)
+        QMessageBox.information(self, "恭喜你已经找到了{}个彩蛋".format(len(discovered_eggs)), eggs_list)
 
     def find_egg(self, title):
         if 'discovered_eggs' not in global_var.configs.config_keys():
@@ -93,7 +90,7 @@ def init():
 
 def display() -> None:
     RLDebug.debug("已打开主页面", type='success', who='RLMain')
-    rlMain.ui.show()
+    rlMain.show()
 
 
 def open_menu():
@@ -115,13 +112,13 @@ def quit_program():
     msgbox = QMessageBox()
     msgbox.setWindowTitle("确认退出")
     msgbox.setText("你确定要退出游戏吗？")
-    msgbox.setIcon(QMessageBox.Question)
-    msgbox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-    msgbox.setDefaultButton(QMessageBox.Yes)
-    msgbox.setButtonText(QMessageBox.Yes, "确定")
-    msgbox.setButtonText(QMessageBox.No, "再想想")
+    msgbox.setIcon(QMessageBox.Icon.Question)
+    msgbox.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+    msgbox.setDefaultButton(QMessageBox.StandardButton.Yes)
+    msgbox.setButtonText(QMessageBox.StandardButton.Yes, "确定")
+    msgbox.setButtonText(QMessageBox.StandardButton.No, "再想想")
     ret = msgbox.exec_()
-    if ret == QMessageBox.Yes:
+    if ret == QMessageBox.StandardButton.Yes:
         sys.exit(0)
     else:
         return

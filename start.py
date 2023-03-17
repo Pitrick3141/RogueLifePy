@@ -1,6 +1,6 @@
 import platform
 import os
-from PySide2.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication
 
 import RLGame
 # 导入模块
@@ -53,7 +53,7 @@ RLUtility.check_update()
 
 # 开始事件循环
 # noinspection PyUnboundLocalVariable
-app.exec_()
+app.exec()
 
 # 窗口关闭后结束Application
 del app

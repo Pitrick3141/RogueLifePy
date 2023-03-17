@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QMessageBox
+from PySide6.QtWidgets import QMessageBox
 
 import RLDebug
 import global_var
@@ -68,15 +68,15 @@ class Configs:
                             key,
                             self._configs.get(key),
                             config_file.get(key)))
-                    msgbox.setIcon(QMessageBox.Question)
-                    msgbox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-                    msgbox.setDefaultButton(QMessageBox.Yes)
-                    msgbox.setButtonText(QMessageBox.Yes, "使用新配置项值")
-                    msgbox.setButtonText(QMessageBox.No, "保留原配置项值")
+                    msgbox.setIcon(QMessageBox.StandardButton.Question)
+                    msgbox.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+                    msgbox.setDefaultButton(QMessageBox.StandardButton.Yes)
+                    msgbox.setButtonText(QMessageBox.StandardButton.Yes, "使用新配置项值")
+                    msgbox.setButtonText(QMessageBox.StandardButton.No, "保留原配置项值")
                     ret = msgbox.exec_()
 
                     # 处理弹窗结果
-                    if ret == QMessageBox.Yes:
+                    if ret == QMessageBox.StandardButton.Yes:
                         # 覆盖为新配置项值
                         self._configs[key] = config_file.get(key)
                         cnt += 1

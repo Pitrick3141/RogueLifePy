@@ -3,7 +3,7 @@ import sys
 import time
 
 import requests
-from PySide2.QtWidgets import QMessageBox, QMainWindow
+from PySide6.QtWidgets import QMessageBox, QMainWindow
 
 
 def rescue_mode():
@@ -12,7 +12,7 @@ def rescue_mode():
                          "读取依赖文件失败，该文件可能不存在或已损坏，程序无法运行\n即将进入恢复模式")
 
     # 弹窗询问是否下载依赖文件
-    if QMessageBox.question(QMainWindow(), "恢复模式", "检测到你缺少依赖文件，是否从云端下载？") == QMessageBox.Yes:
+    if QMessageBox.question(QMainWindow(), "恢复模式", "检测到你缺少依赖文件，是否从云端下载？") == QMessageBox.StandardButton.Yes:
 
         # 获取依赖文件列表
         try:

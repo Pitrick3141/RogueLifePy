@@ -3,30 +3,29 @@ import random
 import time
 from threading import Thread
 
-from PySide2.QtGui import QIcon
-from PySide2.QtUiTools import QUiLoader
-from PySide2extn.RoundProgressBar import roundProgressBar
+from PySide6.QtGui import QIcon, QTextCursor
+from PySide6.QtWidgets import QMainWindow
+
+from RoundProgressBar import roundProgressBar
 
 import RLConsole
 import RLDebug
-import RLRescue
 import global_var
+
+from ui_form_game import Ui_FormGame
 
 global rlGame
 
 
-class RLGame:
+class RLGame(QMainWindow):
     def __init__(self):
         # 加载主窗口UI
-        try:
-            self.ui = QUiLoader().load(os.path.join('ui', 'FormGame.ui'))
-        except RuntimeError:
-            # 缺少必要文件，启用恢复模式
-            RLRescue.rescue_mode()
-            self.ui = QUiLoader().load(os.path.join('ui', 'FormGame.ui'))
+        super(RLGame, self).__init__()
+        self.ui = Ui_FormGame()
+        self.ui.setupUi(self)
 
         # 设置窗口图标
-        self.ui.setWindowIcon(global_var.app_icon())
+        self.setWindowIcon(global_var.app_icon())
 
         # 绑定按钮事件
         self.ui.buttonContinue.clicked.connect(self.forward)
@@ -51,7 +50,7 @@ class RLGame:
         self.ui.listAdjustments_2.itemClicked.connect(self.select_current_adjustment)
 
         # 检定圆环
-        self.progress_check = roundProgressBar(self.ui)
+        self.progress_check = roundProgressBar(self)
         self.progress_check.setGeometry(1235, 90, 100, 100)
         self.progress_check.rpb_setMinimumSize(150, 150)
         self.progress_check.rpb_setMaximumSize(150, 150)
@@ -223,7 +222,8 @@ class RLGame:
             dice_total = self.dices[0] + self.dices[1]
         self.ui.labelRolled.setVisible(True)
         if dice_total != 9999 and dice_total != -9999:
-            self.ui.labelTotal.setText("总计点数: 骰子{} + 修正{} = {}".format(dice_total, self.current_points, dice_total + self.current_points))
+            self.ui.labelTotal.setText("总计点数: 骰子{} + 修正{} = {}".format(
+                dice_total, self.current_points, dice_total + self.current_points))
             self.ui.labelTotal.setVisible(True)
 
         self.total_points = self.current_points + dice_total
@@ -368,7 +368,8 @@ class RLGame:
 
     def event_occur(self, index):
         next_event = global_var.events_list[index]
-        RLDebug.debug("触发了序号为{}的事件{}".format(next_event.index, next_event.name), type='info', who=self.__class__.__name__)
+        RLDebug.debug("触发了序号为{}的事件{}".format(next_event.index, next_event.name),
+                      type='info', who=self.__class__.__name__)
         self.output_message("事件【{}】".format(next_event.name), color='Gray')
         self.output_message(next_event.des)
         self.current_event = next_event
@@ -460,15 +461,15 @@ class RLGame:
         if 'info' in kwargs:
             if kwargs.get('info'):
                 self.ui.textInfo.append(prefix + msg + suffix)
-                self.ui.textInfo.moveCursor(self.ui.textEvent.textCursor().End)
+                self.ui.textInfo.moveCursor(QTextCursor.MoveOperation.End)
             else:
                 # 将调试信息输出
                 self.ui.textEvent.append(prefix + msg + suffix)
                 # 移动到文本框底部
-                self.ui.textEvent.moveCursor(self.ui.textEvent.textCursor().End)
+                self.ui.textEvent.moveCursor(QTextCursor.MoveOperation.End)
         else:
             self.ui.textEvent.append(prefix + msg + suffix)
-            self.ui.textEvent.moveCursor(self.ui.textEvent.textCursor().End)
+            self.ui.textEvent.moveCursor(QTextCursor.MoveOperation.End)
         # RLDebug.debug("游戏信息输出:{}".format(msg), who=self.__class__.__name__)
 
     def multiple_color_msg(self, messages: list, colors: list, font_weights: list, info=False):
@@ -483,10 +484,10 @@ class RLGame:
         total_output += "</p>"
         if info:
             self.ui.textInfo.append(total_output)
-            self.ui.textInfo.moveCursor(self.ui.textEvent.textCursor().End)
+            self.ui.textInfo.moveCursor(QTextCursor.MoveOperation.End)
         else:
             self.ui.textEvent.append(total_output)
-            self.ui.textEvent.moveCursor(self.ui.textEvent.textCursor().End)
+            self.ui.textEvent.moveCursor(QTextCursor.MoveOperation.End)
         # RLDebug.debug("游戏信息输出:{}".format(total_msg), who=self.__class__.__name__)
 
     def select_action(self):
@@ -572,4 +573,4 @@ def init():
 
 def display() -> None:
     RLDebug.debug("已打开游戏页面", type='success', who='RLGame')
-    rlGame.ui.show()
+    rlGame.show()

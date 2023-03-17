@@ -1,22 +1,21 @@
 import time
 import os
-from PySide2.QtUiTools import QUiLoader
 
-import RLRescue
+from PySide6.QtGui import QTextCursor
+from PySide6.QtWidgets import QMainWindow
+
+from ui_form_debug import Ui_FormDebug
 
 global rlDebug
 
 
-class RLDebug:
+class RLDebug(QMainWindow):
 
     def __init__(self):
         # 加载调试窗口UI
-        try:
-            self.ui = QUiLoader().load(os.path.join('ui', 'FormDebug.ui'))
-        except RuntimeError:
-            # 缺少必要文件，启用恢复模式
-            RLRescue.rescue_mode()
-            self.ui = QUiLoader().load(os.path.join('ui', 'FormDebug.ui'))
+        super(RLDebug, self).__init__()
+        self.ui = Ui_FormDebug()
+        self.ui.setupUi(self)
 
         self.enable_file_output = False
         self.output_file = None
@@ -39,7 +38,7 @@ class RLDebug:
             # 将调试信息输出
             self.ui.textDebug.append("-" * kwargs.get('split') * 5)
             # 移动到文本框底部
-            self.ui.textDebug.moveCursor(self.ui.textDebug.textCursor().End)
+            self.ui.textDebug.moveCursor(QTextCursor.MoveOperation.End)
             print("-" * kwargs.get('split') * 5)
             return
 
@@ -93,7 +92,7 @@ class RLDebug:
         # 将调试信息输出
         self.ui.textDebug.append(prefix + current_time + output_message + suffix)
         # 移动到文本框底部
-        self.ui.textDebug.moveCursor(self.ui.textDebug.textCursor().End)
+        self.ui.textDebug.moveCursor(QTextCursor.MoveOperation.End)
         # 控制台输出
         print(current_time + output_message)
         # 文件输出
@@ -116,4 +115,4 @@ def split(length=2):
 
 def display() -> None:
     debug("已打开调试输出界面", type='success', who='RLDebug')
-    rlDebug.ui.show()
+    rlDebug.show()

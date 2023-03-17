@@ -59,13 +59,15 @@ class Player:
             for excluded in event.exclude:
                 if excluded in self.experienced_events:
                     existing_excluded = global_var.events_list.get(excluded)
-                    RLDebug.debug("无法进行序号为{}的事件【{}】: 与序号为{}的事件【{}】互斥".format(index, event.name, existing_excluded.index, existing_excluded.name),
+                    RLDebug.debug("无法进行序号为{}的事件【{}】: 与序号为{}的事件【{}】互斥".format(
+                        index, event.name, existing_excluded.index, existing_excluded.name),
                                   type='error', who=self.__class__.__name__)
                     return False
             for required in event.require:
                 if required not in self.experienced_events:
                     missing_required = global_var.events_list.get(required)
-                    RLDebug.debug("无法进行序号为{}的事件【{}】: 需要先进行序号为{}的事件【{}】".format(index, event.name, missing_required.index, missing_required.name),
+                    RLDebug.debug("无法进行序号为{}的事件【{}】: 需要先进行序号为{}的事件【{}】".format(
+                        index, event.name, missing_required.index, missing_required.name),
                                   type='error', who=self.__class__.__name__)
                     return False
             RLDebug.debug("可以进行序号为{}的事件【{}】".format(index, event.name),
@@ -81,13 +83,15 @@ class Player:
             for excluded in item.exclude:
                 if excluded in self.attained_items:
                     existing_excluded = global_var.items_list.get(excluded)
-                    RLDebug.debug("无法获取序号为{}的藏品【{}】: 与序号为{}的藏品【{}】互斥".format(index, item.name, existing_excluded.index, existing_excluded.name),
+                    RLDebug.debug("无法获取序号为{}的藏品【{}】: 与序号为{}的藏品【{}】互斥".format(
+                        index, item.name, existing_excluded.index, existing_excluded.name),
                                   type='error', who=self.__class__.__name__)
                     return False
             for required in item.require:
                 if required not in self.attained_items:
                     missing_required = global_var.items_list.get(required)
-                    RLDebug.debug("无法获取序号为{}的藏品【{}】: 需要先获取序号为{}的藏品【{}】".format(index, item.name, missing_required.index, missing_required.name),
+                    RLDebug.debug("无法获取序号为{}的藏品【{}】: 需要先获取序号为{}的藏品【{}】".format(
+                        index, item.name, missing_required.index, missing_required.name),
                                   type='error', who=self.__class__.__name__)
                     return False
             return True

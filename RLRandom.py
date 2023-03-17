@@ -33,13 +33,15 @@ class WeightedRandom:
         for i in range(length):
             if len(small_average) > 0:
                 if len(big_average) > 0:
-                    self.prepared_weight_list[small_average[0][1]] = (small_average[0][0] / average_weight, big_average[0][1])
+                    self.prepared_weight_list[small_average[0][1]] = \
+                        (small_average[0][0] / average_weight, big_average[0][1])
                     big_average[0] = (big_average[0][0] - average_weight + small_average[0][0], big_average[0][1])
                     if average_weight - big_average[0][0] > 0.00000001:
                         small_average.append((big_average[0]))
                         del big_average[0]
                 else:
-                    self.prepared_weight_list[small_average[0][1]] = (small_average[0][0] / average_weight, small_average[0][1])
+                    self.prepared_weight_list[small_average[0][1]] = \
+                        (small_average[0][0] / average_weight, small_average[0][1])
                 del small_average[0]
             else:
                 self.prepared_weight_list[big_average[0][1]] = (big_average[0][0] / average_weight, big_average[0][1])
@@ -55,5 +57,6 @@ class WeightedRandom:
             ret = self.index_list[int_random]
         else:
             ret = current[1]
-        RLDebug.debug("随机数:{}({}) 当前权重比{} 返回结果:{}".format(random_number, int_random, current[0], ret), who=self.__class__.__name__)
+        RLDebug.debug("随机数:{}({}) 当前权重比{} 返回结果:{}".format(
+            random_number, int_random, current[0], ret), who=self.__class__.__name__)
         return ret

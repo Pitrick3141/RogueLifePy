@@ -6,30 +6,27 @@ import requests
 import webbrowser
 import subprocess
 
-from PySide2.QtWidgets import QMessageBox, QPushButton, QDialogButtonBox
-from PySide2.QtUiTools import QUiLoader
+from PySide6.QtWidgets import QMessageBox, QPushButton, QDialogButtonBox, QMainWindow
 
 import RLDebug
 import global_var
-import RLRescue
+
+from ui_form_update import Ui_FormUpdate
 
 global rlUpdate
 
 
-class RLUpdate:
+class RLUpdate(QMainWindow):
 
     def __init__(self):
 
         # 加载更新弹窗UI
-        try:
-            self.ui = QUiLoader().load(os.path.join('ui', 'FormUpdate.ui'))
-        except RuntimeError:
-            # 缺少必要文件，启用恢复模式
-            RLRescue.rescue_mode()
-            self.ui = QUiLoader().load(os.path.join('ui', 'FormUpdate.ui'))
+        super(RLUpdate, self).__init__()
+        self.ui = Ui_FormUpdate()
+        self.ui.setupUi(self)
 
         # 设置窗口图标
-        self.ui.setWindowIcon(global_var.app_icon())
+        self.setWindowIcon(global_var.app_icon())
 
         # 最新版本信息
         self.json_data = {}
@@ -41,10 +38,10 @@ class RLUpdate:
         button_ignore = QPushButton('此版本不再提醒')
 
         # 将按钮添加到弹窗
-        self.ui.buttonBox.addButton(button_download, QDialogButtonBox.AcceptRole)
-        self.ui.buttonBox.addButton(button_web, QDialogButtonBox.AcceptRole)
-        self.ui.buttonBox.addButton(button_cancel, QDialogButtonBox.RejectRole)
-        self.ui.buttonBox.addButton(button_ignore, QDialogButtonBox.RejectRole)
+        self.ui.buttonBox.addButton(button_download, QDialogButtonBox.ButtonRole.AcceptRole)
+        self.ui.buttonBox.addButton(button_web, QDialogButtonBox.ButtonRole.AcceptRole)
+        self.ui.buttonBox.addButton(button_cancel, QDialogButtonBox.ButtonRole.RejectRole)
+        self.ui.buttonBox.addButton(button_ignore, QDialogButtonBox.ButtonRole.RejectRole)
 
         # 绑定按钮事件
         button_web.clicked.connect(self.open_publish_page)
@@ -88,13 +85,13 @@ class RLUpdate:
         msgbox.setWindowTitle("确认进行更新")
         msgbox.setText("你确定要自动安装更新吗？")
         msgbox.setInformativeText("当前版本的内容将被覆盖")
-        msgbox.setIcon(QMessageBox.Question)
-        msgbox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        msgbox.setDefaultButton(QMessageBox.Yes)
-        msgbox.setButtonText(QMessageBox.Yes, "确定")
-        msgbox.setButtonText(QMessageBox.No, "手动安装更新")
+        msgbox.setIcon(QMessageBox.StandardButton.Question)
+        msgbox.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        msgbox.setDefaultButton(QMessageBox.StandardButton.Yes)
+        msgbox.setButtonText(QMessageBox.StandardButton.Yes, "确定")
+        msgbox.setButtonText(QMessageBox.StandardButton.No, "手动安装更新")
         ret = msgbox.exec_()
-        if ret == QMessageBox.Yes:
+        if ret == QMessageBox.StandardButton.Yes:
             RLDebug.debug("用户已经确认，开始生成更新脚本" + os.path.join(os.getcwd(), "update.bat"),
                           type='info',
                           who=self.__class__.__name__)
@@ -110,14 +107,14 @@ class RLUpdate:
             RLDebug.debug("成功生成更新脚本" + os.path.join(os.getcwd(), "update.bat"),
                           type='success',
                           who=self.__class__.__name__)
-            QMessageBox.warning(self.ui, "游戏需要重启", "游戏即将重启以更新到最新版本")
+            QMessageBox.warning(self, "游戏需要重启", "游戏即将重启以更新到最新版本")
             RLDebug.debug("退出主程序并开始运行更新脚本" + os.path.join(os.getcwd(), "update.bat"),
                           type='info',
                           who=self.__class__.__name__)
             subprocess.Popen("update.bat")
             sys.exit()
         else:
-            QMessageBox.information(self.ui, "更新文件下载完成", "更新文件已保存至{}\n请手动解压并覆盖当前版本"
+            QMessageBox.information(self, "更新文件下载完成", "更新文件已保存至{}\n请手动解压并覆盖当前版本"
                                     .format(os.path.join(os.getcwd(), self.json_data['assets'][0]['name'])))
 
     def download_update(self):
@@ -162,13 +159,13 @@ class RLUpdate:
         msgbox.setWindowTitle("确认跳过版本")
         msgbox.setText("你确定要跳过当前版本更新吗？")
         msgbox.setInformativeText("你将不再收到当前版本的更新推送")
-        msgbox.setIcon(QMessageBox.Question)
-        msgbox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        msgbox.setDefaultButton(QMessageBox.Yes)
-        msgbox.setButtonText(QMessageBox.Yes, "确定")
-        msgbox.setButtonText(QMessageBox.No, "再想想")
+        msgbox.setIcon(QMessageBox.Icon.Question)
+        msgbox.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        msgbox.setDefaultButton(QMessageBox.StandardButton.Yes)
+        msgbox.setButtonText(QMessageBox.StandardButton.Yes, "确定")
+        msgbox.setButtonText(QMessageBox.StandardButton.No, "再想想")
         ret = msgbox.exec_()
-        if ret == QMessageBox.Yes:
+        if ret == QMessageBox.StandardButton.Yes:
 
             # 将当前已忽略的版本和新忽略的版本序列化
             ignored_version = [self.json_data['tag_name']]
