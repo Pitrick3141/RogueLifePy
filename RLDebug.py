@@ -4,7 +4,8 @@ import os
 from PySide6.QtGui import QTextCursor
 from PySide6.QtWidgets import QMainWindow
 
-from ui_form_debug import Ui_FormDebug
+import global_var
+from ui.ui_form_debug import Ui_FormDebug
 
 global rlDebug
 
@@ -12,6 +13,7 @@ global rlDebug
 class RLDebug(QMainWindow):
 
     def __init__(self):
+
         # 加载调试窗口UI
         super(RLDebug, self).__init__()
         self.ui = Ui_FormDebug()
@@ -19,6 +21,10 @@ class RLDebug(QMainWindow):
 
         self.enable_file_output = False
         self.output_file = None
+
+        # 输出加载时间
+        self.debug("", split=2)
+        self.debug("开始加载游戏，当前时间戳{}".format(round(global_var.start_time)), type='info', who='RLDebug')
 
         if os.path.isfile("debug_output.log"):
             self.enable_file_output = True
@@ -28,6 +34,7 @@ class RLDebug(QMainWindow):
         self.debug("调试输出模块初始化完成", type='success', who=self.__class__.__name__)
 
     def debug(self, text: str, **kwargs) -> None:
+
         # 读取当前时间
         current_time = time.strftime("%H:%M:%S", time.localtime())
 
@@ -36,7 +43,7 @@ class RLDebug(QMainWindow):
         # 分割线
         if kwargs.get('split'):
             # 将调试信息输出
-            self.ui.textDebug.append("-" * kwargs.get('split') * 5)
+            self.ui.textDebug.append("——" * kwargs.get('split') * 5)
             # 移动到文本框底部
             self.ui.textDebug.moveCursor(QTextCursor.MoveOperation.End)
             print("-" * kwargs.get('split') * 5)
@@ -116,3 +123,14 @@ def split(length=2):
 def display() -> None:
     debug("已打开调试输出界面", type='success', who='RLDebug')
     rlDebug.show()
+
+
+def loaded() -> None:
+    global_var.loaded()
+    # 加载完成
+    debug("游戏加载完成，当前时间戳{}，总加载用时{}ms({}s)".format(
+        round(global_var.loaded_time),
+        round(global_var.time_consumption, 2),
+        round(global_var.time_consumption / 1000, 2)
+    ), type='success', who='RLDebug')
+    split()

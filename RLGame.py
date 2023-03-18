@@ -8,11 +8,12 @@ from PySide6.QtWidgets import QMainWindow
 
 from RoundProgressBar import roundProgressBar
 
+import RLMain
 import RLConsole
 import RLDebug
 import global_var
 
-from ui_form_game import Ui_FormGame
+from ui.ui_form_game import Ui_FormGame
 
 global rlGame
 
@@ -42,6 +43,15 @@ class RLGame(QMainWindow):
         self.ui.actionShowAdjustments.triggered.connect(self.show_adjustments)
         self.ui.actionShowCurrentAdjustments.triggered.connect(self.show_current_adjustments)
         self.ui.actionConsole.triggered.connect(self.show_console)
+        self.ui.actionShowDebug.triggered.connect(RLDebug.display)
+        self.ui.actionShowMenu.triggered.connect(RLMain.open_menu)
+        self.ui.actionQuitGame.triggered.connect(RLMain.quit_program)
+
+        # 调试输出
+        if global_var.configs.get_config('enable_debug') is not True:
+            self.ui.actionShowDebug.setVisible(False)
+        if global_var.configs.get_config('allow_command') is not True:
+            self.ui.actionConsole.setVisible(False)
 
         # 绑定列表框事件
         self.ui.listActions.itemClicked.connect(self.select_action)
@@ -82,8 +92,8 @@ class RLGame(QMainWindow):
         self.total_points = 0
 
         # 检定结果
-        # 0 大失败 1 失败 2 成功 3 大成功
-        self.check_result = 0
+        # -1 无需检定 0 大失败 1 失败 2 成功 3 大成功
+        self.check_result = -1
 
         # 当前阶段
         # 0 检定前 1 检定后
@@ -107,14 +117,8 @@ class RLGame(QMainWindow):
                 self.ui.listActions.setEnabled(False)
                 self.roll_dice()
         else:
-            if self.check_result == 0:
-                self.output_message("检定大失败", color='Crimson')
-            elif self.check_result == 1:
-                self.output_message("检定失败", color='Crimson')
-            elif self.check_result == 2:
-                self.output_message("检定成功", color='LimeGreen')
-            elif self.check_result == 3:
-                self.output_message("检定大成功", color='LimeGreen')
+            self.ui.labelRequired.setVisible(False)
+            self.ui.labelPossessed.setVisible(False)
             if self.current_action.success_event == -1 and self.current_action.fail_event == -1:
                 RLDebug.debug("当前事件线已经结束，抽取新的事件", type='info', who=self.__class__.__name__)
                 self.current_stage = 0
@@ -143,8 +147,6 @@ class RLGame(QMainWindow):
         self.ui.labelRolled.setText("")
         self.ui.buttonReroll.setEnabled(False)
         self.ui.checkExtra.setEnabled(False)
-        self.ui.labelRequired.setVisible(False)
-        self.ui.labelPossessed.setVisible(False)
 
     def roll_dice(self, **kwargs):
         self.check_clear()
@@ -370,7 +372,25 @@ class RLGame(QMainWindow):
         next_event = global_var.events_list[index]
         RLDebug.debug("触发了序号为{}的事件{}".format(next_event.index, next_event.name),
                       type='info', who=self.__class__.__name__)
-        self.output_message("事件【{}】".format(next_event.name), color='Gray')
+        if self.check_result == -1:
+            self.output_message("事件【{}】".format(next_event.name), color='Gray')
+        else:
+            messages = ["事件【{}】 ".format(next_event.name)]
+            colors = ['Gray']
+            font_weights = ['normal', 'bold']
+            if self.check_result == 0:
+                messages.append("【检定大失败】")
+                colors.append('Crimson')
+            elif self.check_result == 1:
+                messages.append("【检定失败({}/{})】".format(self.total_points, self.current_action.required_points))
+                colors.append('Crimson')
+            elif self.check_result == 2:
+                messages.append("【检定成功({}/{})】".format(self.total_points, self.current_action.required_points))
+                colors.append('LimeGreen')
+            elif self.check_result == 3:
+                messages.append("【检定大成功】")
+                colors.append('LimeGreen')
+            self.multiple_color_msg(messages, colors, font_weights)
         self.output_message(next_event.des)
         self.current_event = next_event
         self.ui.listActions.clear()
@@ -378,32 +398,32 @@ class RLGame(QMainWindow):
             self.ui.listActions.addItem(global_var.actions_list[action].name)
         for item in next_event.items:
             messages = []
-            colors = ['SkyBlue']
+            colors = ['LimeGreen']
             font_weights = ['normal']
             if item == -1:
                 # 随机抽取物品
                 random_index = global_var.random_items.get_random_index()
                 while not global_var.player_info.check_item(random_index):
                     random_index = global_var.random_items.get_random_index()
-                messages.append('获得了随机藏品')
+                messages.append('+ 获得了随机藏品')
                 global_var.player_info.attain_item(random_index)
                 self.ui.listItems.addItem(global_var.items_list.get(random_index).name)
                 messages.append('【{}】'.format(global_var.items_list.get(random_index).name))
-                colors.append('DarkBlue')
+                colors.append('Gray')
                 font_weights.append('bold')
             else:
                 if global_var.player_info.check_item(item):
-                    messages.append('获得了藏品')
+                    messages.append('+ 获得了藏品')
                     global_var.player_info.attain_item(item)
                     self.ui.listItems.addItem(global_var.items_list.get(item).name)
                     messages.append('【{}】'.format(global_var.items_list.get(item).name))
-                    colors.append('DarkBlue')
+                    colors.append('Gray')
                     font_weights.append('bold')
                 else:
-                    messages.append('无法获得藏品')
+                    messages.append('X 无法获得藏品')
                     colors[0] = 'Orange'
                     messages.append('【{}】'.format(global_var.items_list.get(item).name))
-                    colors.append('DarkBlue')
+                    colors.append('Gray')
                     font_weights.append('bold')
             self.multiple_color_msg(messages, colors, font_weights)
             self.show_collections()
@@ -413,24 +433,24 @@ class RLGame(QMainWindow):
             colors = []
             font_weights = []
             challenge_info = current_challenge.general_info + "..."
-            messages.append("【{}】:".format(current_challenge.name))
+            messages.append("* 挑战【{}】 ".format(current_challenge.name))
             colors.append("DeepSkyBlue")
             font_weights.append("normal")
-            messages.append("（{}）".format(current_challenge.requirements))
+            messages.append("（需求: {}）".format(current_challenge.requirements))
             colors.append("MediumOrchid")
             font_weights.append("normal")
             if current_challenge.challenge_check():
-                messages.append("成功")
+                messages.append("【检定成功】")
                 colors.append("LimeGreen")
                 font_weights.append("bold")
                 challenge_info += current_challenge.success_info
             else:
-                messages.append("失败")
+                messages.append("【检定失败】")
                 colors.append("Crimson")
                 font_weights.append("bold")
                 challenge_info += current_challenge.fail_info
             self.multiple_color_msg(messages, colors, font_weights)
-            self.output_message(challenge_info)
+            self.output_message(challenge_info, italic=True)
         self.update_adjustment_list()
         self.output_message("")
         self.ui.listActions.setEnabled(True)
@@ -458,6 +478,8 @@ class RLGame(QMainWindow):
             if kwargs.get('italic'):
                 prefix = prefix + "<i>"
                 suffix = "</i>" + suffix
+        if 'indent' in kwargs:
+            msg = " " * kwargs.get('indent') + msg
         if 'info' in kwargs:
             if kwargs.get('info'):
                 self.ui.textInfo.append(prefix + msg + suffix)

@@ -6,12 +6,12 @@ import requests
 import webbrowser
 import subprocess
 
-from PySide6.QtWidgets import QMessageBox, QPushButton, QDialogButtonBox, QMainWindow
+from PySide6.QtWidgets import QMessageBox, QMainWindow
 
 import RLDebug
 import global_var
 
-from ui_form_update import Ui_FormUpdate
+from ui.ui_form_update import Ui_FormUpdate
 
 global rlUpdate
 
@@ -31,22 +31,14 @@ class RLUpdate(QMainWindow):
         # 最新版本信息
         self.json_data = {}
 
-        # 弹窗按钮
-        button_web = QPushButton('打开发布页面')
-        button_download = QPushButton('下载更新')
-        button_cancel = QPushButton('取消')
-        button_ignore = QPushButton('此版本不再提醒')
-
-        # 将按钮添加到弹窗
-        self.ui.buttonBox.addButton(button_download, QDialogButtonBox.ButtonRole.AcceptRole)
-        self.ui.buttonBox.addButton(button_web, QDialogButtonBox.ButtonRole.AcceptRole)
-        self.ui.buttonBox.addButton(button_cancel, QDialogButtonBox.ButtonRole.RejectRole)
-        self.ui.buttonBox.addButton(button_ignore, QDialogButtonBox.ButtonRole.RejectRole)
-
         # 绑定按钮事件
-        button_web.clicked.connect(self.open_publish_page)
-        button_download.clicked.connect(self.download_update)
-        button_ignore.clicked.connect(self.ignore_update)
+        self.ui.buttonWeb.clicked.connect(self.open_publish_page)
+        self.ui.buttonDownload.clicked.connect(self.download_update)
+        self.ui.buttonIgnore.clicked.connect(self.ignore_update)
+        self.ui.buttonCancel.clicked.connect(self.cancel_update)
+
+        # 初始化进度条
+        self.ui.progressBar.setVisible(False)
 
         RLDebug.debug("更新提示模块初始化完成", type='success', who=self.__class__.__name__)
 
@@ -78,14 +70,18 @@ class RLUpdate(QMainWindow):
 
     def install_update(self):
 
+        # 自动安装下载好的更新文件
         RLDebug.debug("更新文件{}已经就绪，准备进行更新".format(os.path.join(os.getcwd(), self.json_data['assets'][0]['name'])),
                       type='success',
                       who=self.__class__.__name__)
+
+        self.ui.progressBar.setValue(60)
+
         msgbox = QMessageBox()
         msgbox.setWindowTitle("确认进行更新")
         msgbox.setText("你确定要自动安装更新吗？")
         msgbox.setInformativeText("当前版本的内容将被覆盖")
-        msgbox.setIcon(QMessageBox.StandardButton.Question)
+        msgbox.setIcon(QMessageBox.Icon.Question)
         msgbox.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         msgbox.setDefaultButton(QMessageBox.StandardButton.Yes)
         msgbox.setButtonText(QMessageBox.StandardButton.Yes, "确定")
@@ -95,6 +91,10 @@ class RLUpdate(QMainWindow):
             RLDebug.debug("用户已经确认，开始生成更新脚本" + os.path.join(os.getcwd(), "update.bat"),
                           type='info',
                           who=self.__class__.__name__)
+            self.ui.textInfo.append("正在生成更新脚本")
+
+            self.ui.progressBar.setValue(70)
+
             bat = open("update.bat", 'w')
             update_script = "@echo off \n"
             update_script += "if not exist RogueLifePy.zip exit \n"
@@ -107,41 +107,63 @@ class RLUpdate(QMainWindow):
             RLDebug.debug("成功生成更新脚本" + os.path.join(os.getcwd(), "update.bat"),
                           type='success',
                           who=self.__class__.__name__)
+            self.ui.textInfo.append("成功生成更新脚本")
+
+            self.ui.progressBar.setValue(85)
+
             QMessageBox.warning(self, "游戏需要重启", "游戏即将重启以更新到最新版本")
             RLDebug.debug("退出主程序并开始运行更新脚本" + os.path.join(os.getcwd(), "update.bat"),
                           type='info',
                           who=self.__class__.__name__)
+
+            self.ui.progressBar.setValue(100)
+
             subprocess.Popen("update.bat")
             sys.exit()
         else:
             QMessageBox.information(self, "更新文件下载完成", "更新文件已保存至{}\n请手动解压并覆盖当前版本"
                                     .format(os.path.join(os.getcwd(), self.json_data['assets'][0]['name'])))
 
+            self.ui.progressBar.setVisible(False)
+
     def download_update(self):
         # 下载最新版本更新文件
+        self.ui.textInfo.setText("")
+        self.ui.progressBar.setValue(0)
+        self.ui.progressBar.setVisible(True)
 
         # 检测是否已经存在更新文件
         if os.path.exists(self.json_data['assets'][0]['name']):
             RLDebug.debug("发现已下载的更新文件{},跳过本次下载".format(self.json_data['assets'][0]['name']),
                           type='warn',
                           who=self.__class__.__name__)
+            self.ui.textInfo.append("发现已下载的更新文件{},跳过本次下载".format(self.json_data['assets'][0]['name']))
             self.install_update()
             return
 
         # 下载更新文件
         RLDebug.debug("开始下载更新文件{}".format(self.json_data['assets'][0]['browser_download_url']),
                       who=self.__class__.__name__)
+        self.ui.textInfo.append("开始下载更新文件{}".format(self.json_data['assets'][0]['browser_download_url']))
+        self.ui.progressBar.setValue(5)
+
         try:
             update_file = requests.get(self.json_data['assets'][0]['browser_download_url'])
         except requests.exceptions.ConnectionError:
             RLDebug.debug("网络连接异常，下载更新文件失败", type='error', who=self.__class__.__name__)
+            self.ui.textInfo.append("网络连接异常，下载更新文件失败")
+            self.ui.progressBar.setVisible(False)
             return
 
         RLDebug.debug("已下载更新文件" + self.json_data['assets'][0]['name'],
                       type='success',
                       who=self.__class__.__name__)
+        self.ui.textInfo.append("已下载更新文件" + self.json_data['assets'][0]['name'])
+        self.ui.progressBar.setValue(40)
+
         RLDebug.debug("正在保存更新文件到" + os.path.join(os.getcwd(), self.json_data['assets'][0]['name']),
                       who=self.__class__.__name__)
+        self.ui.textInfo.append("正在保存更新文件到" + os.path.join(os.getcwd(), self.json_data['assets'][0]['name']))
 
         # 保存更新文件到运行目录
         with open(self.json_data['assets'][0]['name'], 'wb') as f:
@@ -150,6 +172,10 @@ class RLUpdate(QMainWindow):
         RLDebug.debug("更新文件已保存至" + os.path.join(os.getcwd(), self.json_data['assets'][0]['name']),
                       type='success',
                       who=self.__class__.__name__)
+        self.ui.textInfo.append("更新文件已保存至" + os.path.join(os.getcwd(), self.json_data['assets'][0]['name']))
+
+        self.ui.progressBar.setValue(50)
+
         self.install_update()
 
     def ignore_update(self):
@@ -172,7 +198,7 @@ class RLUpdate(QMainWindow):
             if 'ignored_version' in global_var.configs.config_keys():
                 for ver in global_var.configs.get_config('ignored_version'):
                     ignored_version.append(ver)
-            RLDebug.debug("当前跳过的版本: {}".format(ignored_version))
+            RLDebug.debug("当前跳过的版本: {}".format(ignored_version), type='info', who=self.__class__.__name__)
             json_dump = {'name': 'ignore_update',
                          'type': 'config',
                          'version': global_var.current_version,
@@ -183,7 +209,14 @@ class RLUpdate(QMainWindow):
             with open(os.path.join(os.getcwd(), 'data', 'ignored_version.json'), "w+") as f:
                 json.dump(json_dump, f)
 
-            RLDebug.debug("配置文件已保存至" + os.path.join(os.getcwd(), 'data', 'ignored_version.json'))
+            RLDebug.debug("配置文件已保存至" + os.path.join(os.getcwd(), 'data', 'ignored_version.json'),
+                          type='success',
+                          who=self.__class__.__name__)
+            self.hide()
+
+    def cancel_update(self):
+        RLDebug.debug("更新已被用户取消", type='info', who=self.__class__.__name__)
+        self.hide()
 
 
 def init():
@@ -193,7 +226,7 @@ def init():
 
 def display():
     RLDebug.debug("已打开更新提示界面", type='success', who='RLUpdate')
-    rlUpdate.ui.show()
+    rlUpdate.show()
 
 
 def set_data(data):

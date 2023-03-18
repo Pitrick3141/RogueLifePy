@@ -6,7 +6,7 @@ import RLGame
 import RLDebug
 import global_var
 
-from ui_form_console import Ui_FormConsole
+from ui.ui_form_console import Ui_FormConsole
 
 global rlConsole
 
@@ -167,5 +167,8 @@ def init():
 
 
 def display() -> None:
-    RLDebug.debug("已打开控制台", type='success', who='RLConsole')
-    rlConsole.show()
+    if global_var.configs.get_config('allow_command') is True:
+        RLDebug.debug("已打开控制台", type='success', who='RLConsole')
+        rlConsole.show()
+    else:
+        RLDebug.debug("没有打开控制台的权限", type='error', who='RLConsole')

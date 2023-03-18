@@ -6,11 +6,10 @@ import global_var
 
 
 def check_logic(condition: str) -> bool:
-
     # 基础比较语句的检定
 
     RLDebug.split(1)
-    RLDebug.debug("开始判定语句" + condition, who="Conditions")
+    RLDebug.debug("开始判定语句【{}】".format(condition), who="Conditions")
 
     # 条件语句中的符号
     symbols = ['>', '<', '?', '!', '=']
@@ -56,20 +55,46 @@ def check_logic(condition: str) -> bool:
             # 如果有某物品返回真，没有返回假
             for item_index in parse_value:
                 if item_index in global_var.player_info.attained_items:
-                    RLDebug.debug("判定结束，结果为真", type='success', who="Conditions")
+                    RLDebug.debug("子表达式{}判定结束，结果为真".format(condition), who="Conditions")
+                    RLDebug.split(1)
                     return True
-                else:
-                    RLDebug.debug("判定结束，结果为假", type='success', who="Conditions")
-                    return False
+            RLDebug.debug("子表达式判定结束，结果为假", who="Conditions")
+            RLDebug.split(1)
+            return False
         elif symbol_compare == '!':
             # 如果有某物品返回假，没有返回真
             for item_index in parse_value:
                 if item_index in global_var.player_info.attained_items:
-                    RLDebug.debug("判定结束，结果为假", type='success', who="Conditions")
+                    RLDebug.debug("子表达式判定结束，结果为假", who="Conditions")
+                    RLDebug.split(1)
                     return False
-                else:
-                    RLDebug.debug("判定结束，结果为真", type='success', who="Conditions")
+            RLDebug.debug("子表达式判定结束，结果为真", who="Conditions")
+            RLDebug.split(1)
+            return True
+    elif prop == 'event':
+        RLDebug.debug("判断属性{}".format(prop), who="Conditions")
+        RLDebug.debug("判断符号:{}".format(symbol_compare), who="Conditions")
+        RLDebug.debug("提供值:{}".format(parse_value), who="Conditions")
+        if symbol_compare == '?':
+            # 如果有某物品返回真，没有返回假
+            for item_index in parse_value:
+                if item_index in global_var.player_info.experienced_events:
+                    RLDebug.debug("子表达式判定结束，结果为真", who="Conditions")
+                    RLDebug.split(1)
                     return True
+            RLDebug.debug("子表达式判定结束，结果为假", who="Conditions")
+            RLDebug.split(1)
+            return False
+        elif symbol_compare == '!':
+            # 如果有某物品返回假，没有返回真
+            for item_index in parse_value:
+                if item_index in global_var.player_info.experienced_events:
+                    RLDebug.debug("子表达式判定结束，结果为假", who="Conditions")
+                    RLDebug.split(1)
+                    return False
+            RLDebug.debug("子表达式判定结束，结果为真", who="Conditions")
+            RLDebug.split(1)
+            return True
     else:
         if global_var.player_info.adjustments.get(prop):
             val_compare = global_var.player_info.adjustments.get(prop)
@@ -90,10 +115,12 @@ def check_logic(condition: str) -> bool:
     RLDebug.debug("提供值:{}".format(val_given), who="Conditions")
 
     if result is True:
-        RLDebug.debug("判定结束，结果为真", type='success', who="Conditions")
+        RLDebug.debug("子表达式判定结束，结果为真", who="Conditions")
+        RLDebug.split(1)
         return True
     else:
-        RLDebug.debug("判定结束，结果为假", type='success', who="Conditions")
+        RLDebug.debug("子表达式判定结束，结果为假", who="Conditions")
+        RLDebug.split(1)
         return False
 
 
@@ -131,7 +158,7 @@ def parse_conditions(condition: str) -> (list, int):
             continue
     if condition[current:] != "":
         parsed_conditions.append(condition[current:])
-    RLDebug.debug("已将语句{}拆分为{}".format(condition, parsed_conditions), type='success', who="Conditions")
+    RLDebug.debug("已将表达式{}拆分为子表达式{}".format(condition, parsed_conditions), who="Conditions")
     return parsed_conditions, i
 
 
@@ -175,10 +202,13 @@ def check(conditions: list) -> bool:
 
 
 def check_conditions(condition: str) -> bool:
-    RLDebug.debug("开始判定条件语句{}".format(condition), type='info', who="Conditions")
+    RLDebug.split(2)
+    RLDebug.debug("开始判定条件表达式{}".format(condition), type='info', who="Conditions")
     if check(parse_conditions(condition)[0]):
-        RLDebug.debug("判定结束，{}的判定结果为真".format(condition), type='success', who="Conditions")
+        RLDebug.debug("判定完成，表达式{}的判定结果为真".format(condition), type='success', who="Conditions")
+        RLDebug.split(2)
         return True
     else:
-        RLDebug.debug("判定结束，{}的判定结果为假".format(condition), type='success', who="Conditions")
+        RLDebug.debug("判定完成，表达式{}的判定结果为假".format(condition), type='success', who="Conditions")
+        RLDebug.split(2)
         return False

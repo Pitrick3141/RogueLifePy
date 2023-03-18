@@ -15,7 +15,7 @@ import global_var
 import RLDebug
 import RLUpdate
 
-from ui_form_utility import Ui_FormUtility
+from ui.ui_form_utility import Ui_FormUtility
 
 global rlMenu
 
@@ -416,9 +416,15 @@ def display():
 def set_debug_button_visible(is_visible):
     if is_visible:
         rlMenu.ui.buttonDebug.setVisible(True)
-        rlMenu.ui.buttonConsole.setVisible(True)
     else:
         rlMenu.ui.buttonDebug.setVisible(False)
+    return
+
+
+def set_console_button_visible(is_visible):
+    if is_visible:
+        rlMenu.ui.buttonConsole.setVisible(True)
+    else:
         rlMenu.ui.buttonConsole.setVisible(False)
     return
 

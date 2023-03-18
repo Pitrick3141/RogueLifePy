@@ -10,7 +10,7 @@ import RLDebug
 import RLUtility
 import global_var
 
-from ui_form_main import Ui_FormMain
+from ui.ui_form_main import Ui_FormMain
 
 global rlMain
 
@@ -33,15 +33,20 @@ class RLMain(QMainWindow):
         self.ui.buttonQuit.clicked.connect(quit_program)
         self.ui.buttonEggs.clicked.connect(self.show_eggs)
         self.ui.buttonMenu.clicked.connect(open_menu)
-        self.ui.buttonStart.clicked.connect(open_game)
-
-        RLDebug.debug("主界面初始化完成", type='success', who=self.__class__.__name__)
+        self.ui.buttonStart.clicked.connect(self.start_game)
+        self.ui.buttonAbout.clicked.connect(self.show_about)
+        self.ui.buttonRecord.clicked.connect(self.show_record)
 
         # 清理更新脚本
         if os.path.isfile("update.bat"):
             RLDebug.debug("发现更新脚本，已清理完成", type='success', who=self.__class__.__name__)
             os.remove("update.bat")
             QMessageBox.information(self, "更新完成", "已成功更新至{}".format(global_var.current_version))
+
+        RLDebug.debug("主界面初始化完成", type='success', who=self.__class__.__name__)
+
+        self.about_cnt = 0
+        self.record_cnt = 0
 
     def show_eggs(self):
         discovered_eggs = global_var.configs.get_config('discovered_eggs')
@@ -59,7 +64,8 @@ class RLMain(QMainWindow):
             global_var.configs.set_config('discovered_eggs', discovered_eggs)
         RLDebug.debug("发现了彩蛋【{}】, 总计已发现彩蛋{}个".format(title, len(discovered_eggs)),
                       who=self.__class__.__name__)
-        json_dump = {'config': True, 'version': '*', 'discovered_eggs': discovered_eggs}
+        json_dump = {'name': 'discovered_eggs', 'type': 'config', 'enabled': True, 'version': '*',
+                     'discovered_eggs': discovered_eggs}
 
         # 保存配置文件
         with open(os.path.join('data', 'discovered_eggs.json'), "w") as f:
@@ -69,6 +75,12 @@ class RLMain(QMainWindow):
 
         # 刷新彩蛋按钮
         self.refresh_egg()
+
+    def start_game(self):
+
+        # 打开游戏界面并且隐藏当前界面
+        RLGame.display()
+        self.hide()
 
     def refresh_egg(self):
         discovered_eggs = global_var.configs.get_config('discovered_eggs')
@@ -82,6 +94,31 @@ class RLMain(QMainWindow):
         else:
             self.ui.buttonEggs.setVisible(False)
 
+    def show_about(self):
+        self.about_cnt += 1
+        if self.about_cnt == 10:
+            self.find_egg("精力充沛")
+        content = "MyRogueLife2\n"
+        content += "当前版本号: {}\n".format(global_var.current_version)
+        content += "作者: Pitrick"
+        if self.about_cnt >= 10:
+            content += "\n您真是精力充沛，竟然点了关于界面{}次!".format(self.about_cnt)
+        QMessageBox.information(self, "关于", content)
+
+    def show_record(self):
+        self.record_cnt += 1
+        if self.record_cnt == 10:
+            self.find_egg("打破砂锅...")
+        if self.record_cnt == 20:
+            self.find_egg("...问到底")
+        if 20 > self.record_cnt >= 10:
+            QMessageBox.warning(self, "不要点了", "确实还没写好，先去体验一下其他的功能(Bug)吧")
+        elif self.record_cnt >= 20:
+            QMessageBox.critical(self, "不给你点了", "都告诉你没写好了还在这里浪费时间，我决定禁用这个按钮")
+            self.ui.buttonRecord.setEnabled(False)
+        else:
+            QMessageBox.information(self, "对不起", "旅行记录还没有编写完成...")
+
 
 def init():
     global rlMain
@@ -90,6 +127,7 @@ def init():
 
 def display() -> None:
     RLDebug.debug("已打开主页面", type='success', who='RLMain')
+    rlMain.refresh_egg()
     rlMain.show()
 
 
@@ -99,12 +137,11 @@ def open_menu():
         RLUtility.set_debug_button_visible(True)
     else:
         RLUtility.set_debug_button_visible(False)
+    if global_var.configs.get_config('allow_command') is True:
+        RLUtility.set_console_button_visible(True)
+    else:
+        RLUtility.set_console_button_visible(False)
     RLUtility.display()
-
-
-def open_game():
-    # 打开游戏
-    RLGame.display()
 
 
 def quit_program():

@@ -187,3 +187,4 @@ fabric.properties
 compile.bat
 .DS_Store
 /designer.exe.lnk
+/convert_ui.bat

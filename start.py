@@ -1,20 +1,20 @@
-import platform
 import os
+import platform
+
 from PySide6.QtWidgets import QApplication
 
-import RLGame
 # 导入模块
-import RLPlayer
-
-import global_var
-import RLDebug
 import RLConfigs
+import RLConsole
 import RLDataFiles
+import RLDebug
+import RLGame
+import RLMain
+import RLPlayer
 import RLUpdate
 import RLUtility
-import RLMain
 
-import RLConsole
+import global_var
 
 # 新建 Pyside2 Application
 app = QApplication([])
@@ -24,13 +24,9 @@ if 'mac' in platform.platform().lower():
 
 # 初始化模块
 global_var.init()
-
 RLDebug.init()
 RLConfigs.init()
-
-
 RLPlayer.init()
-
 RLUpdate.init()
 RLUtility.init()
 
@@ -46,8 +42,10 @@ RLGame.init()
 # 初始化命令台
 RLConsole.init()
 
-# 显示主窗口&检查更新
+# 加载完成计时
+RLDebug.loaded()
 
+# 显示主窗口&检查更新
 RLMain.display()
 RLUtility.check_update()
 

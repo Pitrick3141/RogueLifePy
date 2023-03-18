@@ -1,8 +1,17 @@
 from PySide6.QtGui import QIcon
 import os
+import time
 
 # 当前版本号，用于检查更新
 global current_version
+
+# 时间戳，用于计算加载时间
+# 开始加载的时间
+global start_time
+# 加载完成的时间
+global loaded_time
+# 加载消耗的时间
+global time_consumption
 
 # 程序图标
 global _app_icon
@@ -37,9 +46,9 @@ global data_files
 global data_files_hash
 
 
-def init():
+def init() -> None:
     global current_version
-    current_version = 'v1.0.1'
+    current_version = 'v1.1.0'
 
     # 读取程序图标
     global _app_icon
@@ -85,6 +94,20 @@ def init():
     global data_files_hash
     data_files_hash = {}
 
+    # 初始化启动时间
+    global start_time
+    start_time = time.time()
+
+    return
+
+
+def loaded() -> None:
+
+    # 加载完成时间
+    global loaded_time
+    loaded_time = time.time()
+    global time_consumption
+    time_consumption = loaded_time - start_time
     return
 
 

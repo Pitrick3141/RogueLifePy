@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>RogueLife2</string>
+   <string>MyRogueLife2</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTextBrowser" name="textEvent">
@@ -108,7 +108,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="pageCollections">
      <widget class="QListWidget" name="listItems">
@@ -428,14 +428,19 @@
     <addaction name="actionShowAdjustments"/>
     <addaction name="actionShowCurrentAdjustments"/>
    </widget>
-   <widget class="QMenu" name="menuDebug">
+   <widget class="QMenu" name="menuOption">
     <property name="title">
-     <string>调试</string>
+     <string>选项</string>
     </property>
+    <addaction name="actionShowMenu"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuitGame"/>
+    <addaction name="separator"/>
     <addaction name="actionConsole"/>
+    <addaction name="actionShowDebug"/>
    </widget>
    <addaction name="menuDisplay"/>
-   <addaction name="menuDebug"/>
+   <addaction name="menuOption"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionShowCollections">
@@ -453,9 +458,24 @@
     <string>当前生效的修正列表</string>
    </property>
   </action>
+  <action name="actionShowMenu">
+   <property name="text">
+    <string>打开菜单</string>
+   </property>
+  </action>
+  <action name="actionQuitGame">
+   <property name="text">
+    <string>退出游戏</string>
+   </property>
+  </action>
   <action name="actionConsole">
    <property name="text">
-    <string>Console</string>
+    <string>打开控制台</string>
+   </property>
+  </action>
+  <action name="actionShowDebug">
+   <property name="text">
+    <string>显示调试输出</string>
    </property>
   </action>
  </widget>
