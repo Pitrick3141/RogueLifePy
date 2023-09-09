@@ -1,1 +1,1 @@
-{"name": "allow_debug", "type": "config", "enabled": true, "version": "*", "allow_command": true, "enable_debug": true}
+{"name": "allow_debug", "type": "config", "enabled": true, "version": "*", "allow_command": true, "enable_debug": true, "enable_editor":true}

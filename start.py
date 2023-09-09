@@ -8,6 +8,7 @@ import RLConfigs
 import RLConsole
 import RLDataFiles
 import RLDebug
+import RLEditor
 import RLGame
 import RLMain
 import RLPlayer
@@ -38,6 +39,9 @@ RLMain.init()
 
 # 初始化游戏窗口
 RLGame.init()
+
+# 初始化编辑器
+RLEditor.init()
 
 # 初始化命令台
 RLConsole.init()

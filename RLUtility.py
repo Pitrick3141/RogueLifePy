@@ -6,9 +6,11 @@ import subprocess
 
 import requests
 from PySide6.QtWidgets import QMessageBox, QFileDialog, QMainWindow
+from threading import Thread
 
 import RLConsole
 import RLDataFiles
+import RLEditor
 import RLItems
 import RLPlayer
 import global_var
@@ -40,6 +42,7 @@ class RLMenu(QMainWindow):
         self.ui.buttonCheckUpdate.clicked.connect(self.check_update)
         self.ui.buttonDebug.clicked.connect(self.show_debug)
         self.ui.buttonConsole.clicked.connect(self.show_console)
+        self.ui.buttonOpenEditor.clicked.connect(self.show_editor)
 
     def check_update(self):
 
@@ -56,6 +59,11 @@ class RLMenu(QMainWindow):
 
         # 反序列化json数据
         json_data = r.json()
+
+        if 'tag_name' not in json_data:
+            RLDebug.debug("网络连接异常，检查更新失败", type='error', who=self.__class__.__name__)
+            return
+
         RLDebug.debug("检查更新完成", type='success', who=self.__class__.__name__)
 
         # 最新版本号
@@ -393,6 +401,11 @@ class RLMenu(QMainWindow):
         RLConsole.display()
 
     @staticmethod
+    def show_editor():
+        # 显示编辑器
+        RLEditor.display()
+
+    @staticmethod
     def open_dir():
         # 打开数据文件目录
         RLDebug.debug("已打开数据文件目录", type='success', who='RLMenu')
@@ -429,11 +442,20 @@ def set_console_button_visible(is_visible):
     return
 
 
+def set_editor_button_visible(is_visible):
+    if is_visible:
+        rlMenu.ui.buttonOpenEditor.setVisible(True)
+    else:
+        rlMenu.ui.buttonOpenEditor.setVisible(False)
+    return
+
+
 def sync_data_files():
     rlMenu.sync_data_files()
     return
 
 
 def check_update():
-    rlMenu.check_update()
+    thread_check_update = Thread(target=rlMenu.check_update)
+    thread_check_update.start()
     return

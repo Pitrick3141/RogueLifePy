@@ -1,0 +1,1561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FormEditor</class>
+ <widget class="QMainWindow" name="FormEditor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1440</width>
+    <height>900</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>RogueLife编辑器</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1441</width>
+      <height>851</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>10</number>
+     </property>
+     <property name="leftMargin">
+      <number>5</number>
+     </property>
+     <property name="rightMargin">
+      <number>5</number>
+     </property>
+     <item>
+      <layout class="QGridLayout" name="gridLayoutList">
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>5</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <item row="1" column="1">
+        <widget class="QGroupBox" name="groupActions">
+         <property name="title">
+          <string>行动列表</string>
+         </property>
+         <widget class="QListWidget" name="listActions">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>20</y>
+            <width>331</width>
+            <height>391</height>
+           </rect>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="groupEvents">
+         <property name="title">
+          <string>事件列表</string>
+         </property>
+         <widget class="QListWidget" name="listEvents">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>20</y>
+            <width>331</width>
+            <height>391</height>
+           </rect>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QGroupBox" name="groupChallenges">
+         <property name="title">
+          <string>挑战列表</string>
+         </property>
+         <widget class="QListWidget" name="listChallenges">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>20</y>
+            <width>331</width>
+            <height>391</height>
+           </rect>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="groupItems">
+         <property name="title">
+          <string>藏品列表</string>
+         </property>
+         <widget class="QListWidget" name="listItems">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>20</y>
+            <width>331</width>
+            <height>391</height>
+           </rect>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="leftMargin">
+        <number>10</number>
+       </property>
+       <property name="rightMargin">
+        <number>10</number>
+       </property>
+       <item>
+        <widget class="QGroupBox" name="groupEdit">
+         <property name="title">
+          <string>编辑区</string>
+         </property>
+         <widget class="QTabWidget" name="tabEdit">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>20</y>
+            <width>681</width>
+            <height>401</height>
+           </rect>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="tabBasic">
+           <attribute name="title">
+            <string>编辑基础信息</string>
+           </attribute>
+           <widget class="QFrame" name="frameIndex">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>10</y>
+              <width>200</width>
+              <height>50</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelIndex">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>54</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>编号</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineIndex">
+             <property name="geometry">
+              <rect>
+               <x>50</x>
+               <y>10</y>
+               <width>131</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frameName">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>60</y>
+              <width>200</width>
+              <height>50</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelName">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>54</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>名称</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineName">
+             <property name="geometry">
+              <rect>
+               <x>50</x>
+               <y>10</y>
+               <width>131</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frame_2">
+            <property name="geometry">
+             <rect>
+              <x>420</x>
+              <y>10</y>
+              <width>251</width>
+              <height>361</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="tabText">
+           <attribute name="title">
+            <string>编辑文本</string>
+           </attribute>
+           <widget class="QFrame" name="frameDes">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>150</y>
+              <width>671</width>
+              <height>221</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelDes">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>54</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>描述文本</string>
+             </property>
+            </widget>
+            <widget class="QPlainTextEdit" name="textDes">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>30</y>
+               <width>661</width>
+               <height>181</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frameEff">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>671</width>
+              <height>151</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelEff">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>54</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>效果介绍</string>
+             </property>
+            </widget>
+            <widget class="QPlainTextEdit" name="textEff">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>30</y>
+               <width>661</width>
+               <height>111</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="tabResults">
+           <attribute name="title">
+            <string>编辑结果文本</string>
+           </attribute>
+           <widget class="QFrame" name="frameDisplayGeneral">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>671</width>
+              <height>131</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelDisplayGeneral">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>151</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>通用文本(显示在检定之前)</string>
+             </property>
+            </widget>
+            <widget class="QPlainTextEdit" name="textDisplayGeneral">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>30</y>
+               <width>661</width>
+               <height>91</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frameDisplaySuccess">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>130</y>
+              <width>671</width>
+              <height>121</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelDisplaySuccess">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>151</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>成功文本(检定成功显示)</string>
+             </property>
+            </widget>
+            <widget class="QPlainTextEdit" name="textDisplaySuccess">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>30</y>
+               <width>661</width>
+               <height>81</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frameDisplayFailure">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>250</y>
+              <width>671</width>
+              <height>121</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelDisplayFailure">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>151</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>失败文本(检定失败显示)</string>
+             </property>
+            </widget>
+            <widget class="QPlainTextEdit" name="textDisplayFailure">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>30</y>
+               <width>661</width>
+               <height>81</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="tabPossibility">
+           <attribute name="title">
+            <string>编辑抽取概率</string>
+           </attribute>
+           <widget class="QFrame" name="frameRequire">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>50</y>
+              <width>341</width>
+              <height>321</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelRequire">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>101</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>前提条件关系</string>
+             </property>
+            </widget>
+            <widget class="QListWidget" name="listRequire">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>40</y>
+               <width>241</width>
+               <height>271</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonAddRequire">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>40</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>添加</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonRemoveRequire">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>70</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>移除</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonClearRequire">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>100</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>清空</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineRequire">
+             <property name="geometry">
+              <rect>
+               <x>210</x>
+               <y>10</y>
+               <width>113</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frameExclude">
+            <property name="geometry">
+             <rect>
+              <x>340</x>
+              <y>50</y>
+              <width>341</width>
+              <height>321</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelExclude">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>101</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>无法共存关系</string>
+             </property>
+            </widget>
+            <widget class="QListWidget" name="listExclude">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>40</y>
+               <width>241</width>
+               <height>271</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonAddExclude">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>40</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>添加</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonRemoveExclude">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>70</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>移除</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonClearExclude">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>100</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>清空</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineExclude">
+             <property name="geometry">
+              <rect>
+               <x>210</x>
+               <y>10</y>
+               <width>113</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QCheckBox" name="checkExcluisive">
+            <property name="geometry">
+             <rect>
+              <x>10</x>
+              <y>10</y>
+              <width>79</width>
+              <height>20</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>可以抽取</string>
+            </property>
+           </widget>
+           <widget class="QLabel" name="labelPoss">
+            <property name="geometry">
+             <rect>
+              <x>160</x>
+              <y>10</y>
+              <width>54</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="text">
+             <string>抽取概率</string>
+            </property>
+           </widget>
+           <widget class="QLineEdit" name="linePoss">
+            <property name="geometry">
+             <rect>
+              <x>220</x>
+              <y>10</y>
+              <width>141</width>
+              <height>20</height>
+             </rect>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="tabAdjustment">
+           <attribute name="title">
+            <string>编辑修正</string>
+           </attribute>
+           <widget class="QFrame" name="frameAdjustment">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>331</width>
+              <height>371</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>101</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>赠与的修正列表</string>
+             </property>
+            </widget>
+            <widget class="QListWidget" name="listAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>31</y>
+               <width>201</width>
+               <height>331</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="labelAdjustmentName">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>10</y>
+               <width>54</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>修正名称</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineAdjustmentName">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>30</y>
+               <width>101</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="labelAdjustmentValue">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>60</y>
+               <width>54</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>修正值</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineAdjustmentValue">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>80</y>
+               <width>101</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonAddAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>110</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>添加修正</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonRemoveAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>140</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>移除修正</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonClearAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>170</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>清空修正</string>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frameRequiredAdjustment">
+            <property name="geometry">
+             <rect>
+              <x>330</x>
+              <y>0</y>
+              <width>341</width>
+              <height>371</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelRequiredAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>121</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>挑战需求的修正列表</string>
+             </property>
+            </widget>
+            <widget class="QListWidget" name="listRequiredAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>31</y>
+               <width>201</width>
+               <height>331</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="labelRequiredAdjustmentName">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>10</y>
+               <width>54</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>修正名称</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineRequiredAdjustmentName">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>30</y>
+               <width>111</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="labelRequiredAdjustmentValue">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>60</y>
+               <width>54</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>修正值</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineRequiredAdjustmentValue">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>80</y>
+               <width>111</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonAddRequiredAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>110</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>添加修正</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonRemoveRequiredAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>140</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>移除修正</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonClearRequiredAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>170</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>清空修正</string>
+             </property>
+            </widget>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="tabBind">
+           <attribute name="title">
+            <string>绑定挑战与行动</string>
+           </attribute>
+           <widget class="QFrame" name="frameBindChallenge">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>341</width>
+              <height>371</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelBindChallenge">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>101</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>绑定的挑战列表</string>
+             </property>
+            </widget>
+            <widget class="QListWidget" name="listChallenge">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>40</y>
+               <width>241</width>
+               <height>321</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonAddChallenge">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>40</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>添加</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonRemoveChallenge">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>70</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>移除</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonClearChallenge">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>100</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>清空</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineChallenge">
+             <property name="geometry">
+              <rect>
+               <x>210</x>
+               <y>10</y>
+               <width>113</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frameBindAction">
+            <property name="geometry">
+             <rect>
+              <x>340</x>
+              <y>0</y>
+              <width>341</width>
+              <height>371</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelBindAction">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>101</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>绑定的行动列表</string>
+             </property>
+            </widget>
+            <widget class="QListWidget" name="listAction">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>40</y>
+               <width>241</width>
+               <height>321</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonAddAction">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>40</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>添加</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonRemoveAction">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>70</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>移除</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonClearAction">
+             <property name="geometry">
+              <rect>
+               <x>260</x>
+               <y>100</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>清空</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineAction">
+             <property name="geometry">
+              <rect>
+               <x>210</x>
+               <y>10</y>
+               <width>113</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+          </widget>
+          <widget class="QWidget" name="tabAction">
+           <attribute name="title">
+            <string>编辑行动</string>
+           </attribute>
+           <widget class="QFrame" name="frameRequirePoint">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>211</width>
+              <height>50</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelRequirePoint">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>81</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>成功需要点数</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineRequirePoint">
+             <property name="geometry">
+              <rect>
+               <x>100</x>
+               <y>10</y>
+               <width>101</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frameSuccessEvent">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>50</y>
+              <width>231</width>
+              <height>50</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelSuccessEvent">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>81</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>成功触发事件</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineSuccessEvent">
+             <property name="geometry">
+              <rect>
+               <x>90</x>
+               <y>10</y>
+               <width>131</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frameFailureEvent">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>100</y>
+              <width>231</width>
+              <height>50</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelFailureEvent">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>81</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>失败触发事件</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineFailureEvent">
+             <property name="geometry">
+              <rect>
+               <x>90</x>
+               <y>10</y>
+               <width>131</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frameBigSuccessEvent">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>150</y>
+              <width>261</width>
+              <height>50</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelBigSuccessEvent">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>91</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>大成功触发事件</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineBigSuccessEvent">
+             <property name="geometry">
+              <rect>
+               <x>110</x>
+               <y>10</y>
+               <width>141</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frameBigFailureEvent">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>200</y>
+              <width>261</width>
+              <height>50</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelBigFailureEvent">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>91</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>大失败触发事件</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineBigFailureEvent">
+             <property name="geometry">
+              <rect>
+               <x>110</x>
+               <y>10</y>
+               <width>141</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+           <widget class="QFrame" name="frameConvertAdjustment">
+            <property name="geometry">
+             <rect>
+              <x>330</x>
+              <y>0</y>
+              <width>341</width>
+              <height>371</height>
+             </rect>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <widget class="QLabel" name="labelConvertAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>10</y>
+               <width>141</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>可以转换点数的修正列表</string>
+             </property>
+            </widget>
+            <widget class="QListWidget" name="listConvertAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>31</y>
+               <width>201</width>
+               <height>331</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="labelConvertAdjustmentName">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>10</y>
+               <width>54</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>修正名称</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineConvertAdjustmentName">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>30</y>
+               <width>111</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="labelConvertAdjustmentCoef">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>60</y>
+               <width>54</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>转换系数</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="lineConvertAdjustmentCoef">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>80</y>
+               <width>111</width>
+               <height>20</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonAddConvertAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>110</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>添加修正</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonRemoveConvertAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>140</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>移除修正</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="buttonClearConvertAdjustment">
+             <property name="geometry">
+              <rect>
+               <x>220</x>
+               <y>170</y>
+               <width>75</width>
+               <height>24</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>清空修正</string>
+             </property>
+            </widget>
+           </widget>
+          </widget>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupOperation">
+         <property name="title">
+          <string>控制区</string>
+         </property>
+         <widget class="QWidget" name="gridLayoutWidget_2">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>20</y>
+            <width>681</width>
+            <height>391</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayoutOperations">
+           <property name="leftMargin">
+            <number>10</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>10</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <property name="spacing">
+            <number>10</number>
+           </property>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="buttonQuit">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>退出</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="buttonRefresh">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>刷新</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="buttonJson">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>生成json</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="buttonSave">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>保存更改</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QPushButton" name="buttonEdit">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>编辑选中项</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="buttonClear">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>清空编辑区</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1440</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

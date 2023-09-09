@@ -42,6 +42,9 @@ class Ui_FormUtility(object):
         self.buttonSyncDataFiles = QPushButton(FormUtility)
         self.buttonSyncDataFiles.setObjectName(u"buttonSyncDataFiles")
         self.buttonSyncDataFiles.setGeometry(QRect(230, 10, 151, 51))
+        self.buttonOpenEditor = QPushButton(FormUtility)
+        self.buttonOpenEditor.setObjectName(u"buttonOpenEditor")
+        self.buttonOpenEditor.setGeometry(QRect(10, 130, 151, 51))
 
         self.retranslateUi(FormUtility)
 
@@ -56,5 +59,6 @@ class Ui_FormUtility(object):
         self.buttonDebug.setText(QCoreApplication.translate("FormUtility", u"\u6253\u5f00\u8c03\u8bd5\u8f93\u51fa", None))
         self.buttonOpenDataFilesDir.setText(QCoreApplication.translate("FormUtility", u"\u6253\u5f00\u6570\u636e\u6587\u4ef6\u76ee\u5f55", None))
         self.buttonSyncDataFiles.setText(QCoreApplication.translate("FormUtility", u"\u4ece\u4e91\u7aef\u540c\u6b65\u6570\u636e\u6587\u4ef6", None))
+        self.buttonOpenEditor.setText(QCoreApplication.translate("FormUtility", u"\u6253\u5f00\u6570\u636e\u6587\u4ef6\u7f16\u8f91\u5668", None))
     # retranslateUi
 

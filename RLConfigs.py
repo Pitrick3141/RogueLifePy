@@ -30,7 +30,7 @@ class Configs:
             return
 
         # 可用配置项
-        valid_keys = ['ignored_version', 'allow_command', 'discovered_eggs', 'enable_debug']
+        valid_keys = ['ignored_version', 'allow_command', 'discovered_eggs', 'enable_debug', 'enable_editor']
 
         # 配置项计数
         cnt = 0

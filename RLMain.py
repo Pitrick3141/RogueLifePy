@@ -141,6 +141,10 @@ def open_menu():
         RLUtility.set_console_button_visible(True)
     else:
         RLUtility.set_console_button_visible(False)
+    if global_var.configs.get_config('enable_editor') is True:
+        RLUtility.set_editor_button_visible(True)
+    else:
+        RLUtility.set_editor_button_visible(False)
     RLUtility.display()
 
 

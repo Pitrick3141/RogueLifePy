@@ -65,6 +65,7 @@ class RLDebug(QMainWindow):
                         'Challenges': '@挑战信息',
                         'Actions': '@行动信息',
                         'WeightedRandom': '@随机数生成器',
+                        'RLEditor': '@编辑器',
                         }
 
         info_from = "@未知来源"
